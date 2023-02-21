@@ -26,4 +26,4 @@ class Tidal:
         query = f"{title} {artist}"
 
         result = self.tidal.search(query, search_type='tracks', limit=1)
-        return result['items'][0]['url']
+        return {'url': result['items'][0]['url'], 'info': f'{title} by {artist}'}

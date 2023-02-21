@@ -31,6 +31,6 @@ class Convert:
             return "Something went wrong."
 
 
-ConvertObject = Convert()
+# ConvertObject = Convert()
 
-print(ConvertObject.convert_link('https://tidal.com/browse/track/24696095', 'spotify'))
+# print(ConvertObject.convert_link('https://tidal.com/browse/track/24696095', 'spotify'))
