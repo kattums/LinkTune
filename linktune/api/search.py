@@ -8,6 +8,7 @@ client_secret = os.environ.get('SPOTIPY_CLIENT_SECRET')
 # given an artist name, track title, and target service, search should locate track and return links. default value for target is all.
 # if 'all', then return links for all services
 
+# TODO: implement map of services for quicker look up; add "all" option which is the default; remove api keys from code
 def search_track(artist, title, service='all'):
     info = {'title': title, 'artist': artist}
     if service == 'spotify':

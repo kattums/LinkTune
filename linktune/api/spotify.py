@@ -38,23 +38,3 @@ class Spotify:
             return {'info': f'{title} by {artist}', 'url':f'open.spotify.com/track/{track_id}'}
         else:
             return 'Track not found.'
-
-# # testing that it works
-# SpotifyObject = Spotify(client_id, client_secret)
-# TidalObject = Tidal()
-
-# def convert_tidal_to_spotify(url):
-#     track_info = TidalObject.get_track_info(url)
-    
-#     spotify_url = SpotifyObject.get_url(track_info)
-#     return spotify_url
-
-# def convert_spotify_to_tidal(url):
-#     track_info = SpotifyObject.get_track_info(url)
-
-#     tidal_info = TidalObject.get_url(track_info)
-#     return tidal_info
-
-# print('Tidal to Spotify:', convert_tidal_to_spotify('https://tidal.com/browse/track/1771732'))
-
-# print('Spotify to Tidal:', convert_spotify_to_tidal('https://open.spotify.com/track/5zzWx7oJ9zBmv76uFaFeYR'))

@@ -29,8 +29,3 @@ class Convert:
             return self.tidal.get_url(track_info)
         else:
             return "Something went wrong."
-
-
-# ConvertObject = Convert()
-
-# print(ConvertObject.convert_link('https://tidal.com/browse/track/24696095', 'spotify'))
