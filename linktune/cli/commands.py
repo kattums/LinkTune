@@ -1,20 +1,21 @@
-# import sys
-# from linktune.cli.arguments import create_parser
-# from linktune.api import Convert
-# # from linktune.cli.arguments import convert_arguments, search_arguments
+from linktune.api.convert import Convert
+from linktune.api.search import Search
 
-# # ConvertCommand ; SearchCommand ; 
+def convert(args):
+    # get target service and song link from arguments
+    service, link = args.target, args.link
 
-# class ConvertCommand:
-#     @staticmethod
-#     def execute(args):
-#         service = args.service
-#         url = args.url
+    # call convert_link function from convert api
+    converted_link = Convert().convert_link(link, service)
+    if converted_link is None:
+        print(f"Unable to find information for {link} on {service}")
+    print(converted_link)
 
-#         converted_url = Convert.convert_link(url, service)
-#         if converted_url is None:
-#             print(f"Unable to find information for {url} on {service}")
-#         print(converted_url)
+# def search(args):
+#     artist, title, service = args.artist, args.title, args.service
+
+
+
 
 # # class SearchCommand:
 # #     @staticmethod
