@@ -16,8 +16,8 @@ def search_track(artist, title, service='all'):
     elif service == 'deezer':
         deezer = Deezer()
         return deezer.get_url(info)
-    # elif service == 'apple':
-    #     apple = AppleMusic()
-    #     return apple.get_url
+    elif service == 'apple':
+        apple = AppleMusic()
+        return apple.get_url(info)
     else:
         return "Something broke"

@@ -1,10 +1,6 @@
 import requests
 
 class AppleMusic:
-    base_url = 'https://music.apple.com/gb/album/'
-
-# example applemusic: https://music.apple.com/gb/album/mockingbird/1452852431?i=1452852850
-# needs TWO ids. string after album is song name.
 
     itunes_base = 'https://itunes.apple.com/'
 
@@ -28,3 +24,22 @@ class AppleMusic:
         if not track_id:
             return "Could not locate track id"
         return track_id
+    
+    def get_url(self, info):
+        title = info['title']
+        if isinstance(info['artist'], list):
+            artist = info['artist'][0]
+        else:
+            artist = info['artist']
+
+        query = f'{self.itunes_base}search?term={artist}+{title}'
+
+        res = requests.get(query)
+        res.raise_for_status()
+
+        # get json response of matching tracks
+        data = res.json()['results'][0]
+
+        link, artist, title = data['trackViewUrl'], data['artistName'], data['trackName']
+
+        return f'{title} ' 'by ' f'{artist}'': ' f'{link}'

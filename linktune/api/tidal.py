@@ -22,7 +22,10 @@ class Tidal:
 
     def get_url(self, info):
         title = info['title']
-        artist = info['artist'][0]
+        if isinstance(info['artist'], list):
+            artist = info['artist'][0]
+        else:
+            artist = info['artist']
         query = f"{title} {artist}"
 
         result = self.tidal.search(query, search_type='tracks', limit=1)

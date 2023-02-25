@@ -32,5 +32,7 @@ class Convert:
             return self.spotify.get_url(track_info)
         elif target_service == 'tidal':
             return self.tidal.get_url(track_info)
+        elif target_service == 'apple':
+            return self.apple.get_url(track_info)
         else:
             return "Something went wrong."
