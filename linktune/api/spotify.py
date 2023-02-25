@@ -1,4 +1,5 @@
 import spotipy
+import re
 from spotipy.oauth2 import SpotifyClientCredentials
 
 class Spotify:
@@ -32,6 +33,9 @@ class Spotify:
 
     def get_url(self, info):
         title = info['title']
+        # remove extra characters present in track title
+        title = re.sub("\(.*?\)|\[.*?\]","",title).rstrip()
+
         artist = info['artist']
         query = f"{title} artist:{artist}"
 
