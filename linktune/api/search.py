@@ -1,5 +1,6 @@
 from linktune.api.tidal import Tidal
 from linktune.api.spotify import Spotify
+from linktune.api.deezer import Deezer
 from linktune.config.config import SPOTIPY_CLIENT_ID, SPOTIPY_CLIENT_SECRET
 
 # TODO: implement map of services for quicker look up; add "all" option which is the default
@@ -11,5 +12,8 @@ def search_track(artist, title, service='all'):
     elif service == 'tidal':
         tidal = Tidal()
         return tidal.get_track_url(info)
+    elif service == 'deezer':
+        deezer = Deezer()
+        return deezer.get_url(info)
     else:
         return "Something broke"

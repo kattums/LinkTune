@@ -15,7 +15,7 @@ def create_parser():
     search_parser = subparsers.add_parser('search', help='Search for a track by artist and title on a music service.')
     search_parser.add_argument('--artist', '-a', help='Artist name')
     search_parser.add_argument('--title', '-t', help='Track title')
-    search_parser.add_argument('--service', '-s', choices=['spotify', 'tidal', 'all'], default='all', help='The music service to search.')
+    search_parser.add_argument('--service', '-s', choices=['spotify', 'tidal', 'deezer', 'all'], default='all', help='The music service to search.')
     search_parser.set_defaults(func=search)
 
     return parser

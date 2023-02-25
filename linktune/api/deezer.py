@@ -19,12 +19,24 @@ class Deezer:
 
         return {'artist': artist, 'title': title}
 
-
-    # def get_url(self, info):
-
     def _get_track_id(self, track_url):
         _, _, track_id = track_url.rpartition('/')
         print(f'Track id is {track_id}')
         if not track_id:
             return "Could not locate track id"
         return track_id
+    
+    def get_url(self, info):
+        title = info['title']
+        artist = info['artist']
+
+        query = f'{self.base_url}/search?q=artist:"{artist}" track:"{title}"'
+        response = requests.get(query)
+        response.raise_for_status()
+
+        data = response.json()['data'][0]
+        
+        link = data['link']
+
+        return 'info: ' f'{title} by {artist}', 'url: 'f'{link}'
+
