@@ -1,4 +1,4 @@
-from arguments import create_parser
+from linktune.cli.arguments import create_parser
 
 def main():
     parser = create_parser()
