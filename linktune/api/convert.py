@@ -1,6 +1,7 @@
 from linktune.api.tidal import Tidal
 from linktune.api.spotify import Spotify
 from linktune.api.deezer import Deezer
+from linktune.api.applemusic import AppleMusic
 from linktune.config.config import SPOTIPY_CLIENT_ID, SPOTIPY_CLIENT_SECRET
 
 class Convert:
@@ -8,6 +9,7 @@ class Convert:
         self.spotify = Spotify(SPOTIPY_CLIENT_ID, SPOTIPY_CLIENT_SECRET)
         self.tidal = Tidal()
         self.deezer = Deezer()
+        self.apple = AppleMusic()
 
     def convert_link(self, link, target_service):
         if "spotify" in link:
@@ -16,6 +18,8 @@ class Convert:
             source_service = self.tidal
         elif "deezer" in link:
             source_service = self.deezer
+        elif 'apple' in link:
+            source_service = self.apple
         else:
             return None
 

@@ -1,5 +1,4 @@
 import requests
-import json
 
 class Deezer:
     base_url = 'https://api.deezer.com/'
@@ -39,4 +38,3 @@ class Deezer:
         link = data['link']
 
         return 'info: ' f'{title} by {artist}', 'url: 'f'{link}'
-
