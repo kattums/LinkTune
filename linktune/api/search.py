@@ -15,6 +15,15 @@ def search_track(artist, title, service='all'):
         'apple': (AppleMusic,),
     }
 
+    if service == 'all':
+        results = []
+        for service in api_map:
+            api_args = api_map[service]
+            api_class = api_args[0]
+            api = api_class(*api_args[1:])
+            results.append(f"{service}: {api.get_url(info)}")
+        return results
+
     if service in api_map:
         api_args = api_map[service]
         api_class = api_args[0]
@@ -23,17 +32,3 @@ def search_track(artist, title, service='all'):
     else:
         return "Service not supported"
 
-    # if service == 'spotify':
-    #     spotify = Spotify(SPOTIPY_CLIENT_ID, SPOTIPY_CLIENT_SECRET)
-    #     return spotify.get_url(info)
-    # elif service == 'tidal':
-    #     tidal = Tidal()
-    #     return tidal.get_track_url(info)
-    # elif service == 'deezer':
-    #     deezer = Deezer()
-    #     return deezer.get_url(info)
-    # elif service == 'apple':
-    #     apple = AppleMusic()
-    #     return apple.get_url(info)
-    # else:
-    #     return "Something broke"
