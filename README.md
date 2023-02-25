@@ -1,2 +1,2 @@
 # LinkTune
-LinkTune is a command line tool that allows the conversion of music track links between different music service providers. With LinkTune, you can quickly and easily convert music links between platforms like Spotify, Tidal, Apple Music, and more.
+LinkTune is a command line tool that allows the conversion of music track links between different music service providers. Created to facilitate easy music sharing between people using different music services, LinkTune currently supports link conversion between Spotify, Apple Music, Tidal, and Deezer.
