@@ -10,7 +10,7 @@ class Spotify:
         track_id = self._get_track_id(track_url)
         print('Track id is:', track_id)
         if not track_id:
-            return None
+            return 'Could not identify Spotify track ID'
 
         track = self.sp.track(track_id)
         artists = [artist['name'] for artist in track['artists']]
@@ -20,6 +20,9 @@ class Spotify:
 
     def _get_track_id(self, track_url):
         track_id = None
+        # check if Spotify internal id is appended to the link and remove if so
+        if '?si=' in track_url:
+            track_url = track_url.split('?si=')[0]
         if 'open.spotify.com/track/' in track_url:
             _, _, track_id = track_url.rpartition('/')
         elif 'spotify:track:' in track_url:

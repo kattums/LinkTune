@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>LinkTune</title>
+</head>
+<body>
+    <header>
+        <h1>LinkTune</h1>
+    </header>
+    <main>
+        <section>
+            <label for="url">Enter link:</label>
+            <input type="text" id="url">
+        </section>
+        <section>
+            <!-- <label for="service">Convert to:</label> -->
+            <!-- <select id="service"> -->
+                <!-- <option value="spotify">Spotify</option>
+                <option value="tidal">Tidal</option> -->
+                <ul>
+                    <li>
+                        <input type="checkbox" id="spotify" name="spotify" value="spotify">
+                        <label for="spotify">Spotify</label>
+                     </li>
+                     <li>
+                        <input type="checkbox" id="tidal" name="tidal" value="tidal">
+                        <label for="spotify">Tidal</label>
+                    </li>
+                </ul>
+            <!-- </select> -->
+        </section>
+        <section>
+            <button id="convert">Convert Link</button>
+        </section>
+        <section id="info"></section>
+        <section id="result"></section>
+    </main>
+    <script src="/static/js/index.js"></script>
+</body>
+</html>
