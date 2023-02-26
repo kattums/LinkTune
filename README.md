@@ -45,20 +45,7 @@ or use shorthand options, e.g.:
 Omitting `--service` will return the track on all services.
 
 ## Installation
-**warning: a bit of a mess atm, but it does work 🙃**
-
-Clone the repo:
-
-    git clone https://github.com/kattums/linktune.git
-
-Create and activate a Python virtual environment:
-
-    python3 -m venv .env
-    source .venv/bin/activate
-
-Navigate to `/linktune/` directory and run:
-
-    pip install .
+**tbd**
 
 ### Get a Spotify API key
 This app uses the Spotify API, which requires the use of a Spotify client ID and client secret to authenticate API requests. You can generate these for free by creating a Spotify account and navigating to `https://developer.spotify.com/dashboard/applications`.
