@@ -9,7 +9,6 @@ class Spotify:
     def get_track_info(self, track_url):
         print('Searching for track...')
         track_id = self._get_track_id(track_url)
-        print('Track id is:', track_id)
         if not track_id:
             return 'Could not identify Spotify track ID'
 

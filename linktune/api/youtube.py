@@ -9,7 +9,7 @@ class YouTube:
         self.youtube = YTMusic()
 
     def get_track_info(self, track_url):
-        print('Searching for YouTube Music track...')
+        print('Searching for track...')
         track_id = self._get_track_id(track_url)
         if not track_id:
             return 'Could not identify YouTube Music track ID from url.'
@@ -48,8 +48,3 @@ class YouTube:
         artist = res['artists'][0]['name']
 
         return(f"info: {title} by {artist}: url: https://music.youtube.com/watch?v={track_id}")
-
-
-yt = YouTube()
-testDict = {'artist': 'alt-J', 'title': 'Taro'}
-print(yt.get_url(testDict))
