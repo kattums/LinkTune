@@ -44,6 +44,6 @@ class Spotify:
         if result['tracks']['total'] > 0:
             uri = result['tracks']['items'][0]['uri']
             _, _, track_id = uri.rpartition(':')
-            return f"info: {title} by {artist}, url:open.spotify.com/track/{track_id}"
+            return f"info: {title} by {artist}, url: open.spotify.com/track/{track_id}"
         else:
             return 'Track not found.'
