@@ -1,8 +1,11 @@
 # LinkTune
-LinkTune is a Python command line tool that allows users to convert music links between music streaming services and perform simple song searches across these platforms. Created to facilitate easy music sharing between people using different music services, LinkTune currently supports link conversion between Spotify, Apple Music, Tidal, and Deezer.
-
-## Installation
-working on it
+LinkTune is a Python command line tool that allows users to convert music links between music streaming services and perform simple song searches across these platforms. Created to facilitate easy music sharing between people using different music services. 
+### Supported services
+LinkTune currently supports these music services:
+- Spotify
+- Apple Music
+- Tidal
+- Deezer
 
 ## Usage
 
@@ -39,9 +42,31 @@ or use shorthand options, e.g.:
 
     Diazepam by Ren: https://music.apple.com/us/album/diazepam/1652019136?i=1652019316&uo=4
 
-## Supported services
-LinkTune currently supports these music services:
-- Spotify
-- Apple Music
-- Tidal
-- Deezer
+Omitting `--service` will return the track on all services.
+
+## Installation
+**warning: a bit of a mess atm, but it does work 🙃**
+
+Clone the repo:
+
+    git clone https://github.com/kattums/linktune.git
+
+Create and activate a Python virtual environment:
+
+    python3 -m venv .env
+    source .venv/bin/activate
+
+Navigate to `/linktune/` directory and run:
+
+    pip install .
+
+### Get a Spotify API key
+This app uses the Spotify API, which requires the use of a Spotify client ID and client secret to authenticate API requests. You can generate these for free by creating a Spotify account and navigating to `https://developer.spotify.com/dashboard/applications`.
+
+You can then set your local environment variables for `SPOTIPY_CLIENT_ID` and `SPOTIPY_CLIENT_SECRET` as follows:
+
+    export SPOTIPY_CLIENT_ID=<your_client_id>
+    export SPOTIPY_CLIENT_SECRET=<your_client_secret>
+
+These environment variables will be read from `config.py`.
+
