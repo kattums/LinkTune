@@ -10,8 +10,6 @@ __pycache__/
 
 # Distribution / packaging
 .Python
-/web/
-!/web/.gitkeep
 tests/
 build/
 develop-eggs/
