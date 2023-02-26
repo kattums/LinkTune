@@ -48,3 +48,9 @@ class YouTube:
         artist = res['artists'][0]['name']
 
         return(f"info: {title} by {artist}: url: https://music.youtube.com/watch?v={track_id}")
+
+# testing using regular youtube links from unofficial accounts... actually does work but really wouldnt be that great for non-verified artists
+# I could make it take the track title from youtube and use that as the search query for other services?
+# id = 'xAok29V8Bf4'
+# yt = YouTube()
+# print(yt.get_track_info('https://music.youtube.com/watch?v=xAok29V8Bf4'))
