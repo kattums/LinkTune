@@ -4,6 +4,7 @@ LinkTune is a Python command line tool that allows users to convert music links 
 LinkTune currently supports these music services:
 - Spotify
 - Apple Music
+- YouTube Music
 - Tidal
 - Deezer
 
