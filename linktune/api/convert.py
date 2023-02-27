@@ -18,20 +18,39 @@ class Convert:
 
     def convert_link(self, link, target_service):
         source_service = None
-        # check if target_service provided. use tuple unpacking to
-        # initialise class from the service map and unpack its args.
-        if target_service:
-            target_class, *target_args = self.service_map.get(target_service, (None,))
-            target_match = target_class(*target_args)
-            for service_name, service_tuple in self.service_map.items():
-                if service_name in link:
-                    source_service = service_tuple[0](*service_tuple[1:])
-                    break
 
-            if source_service:
-                track_info = source_service.get_track_info(link)
+        # find service name in services map. initialise service with args if necessary
+        #  and get track info
+        for service_name, service_tuple in self.service_map.items():
+            if service_name in link:
+                source_service = service_tuple[0](*service_tuple[1:])
+                break
+        if not source_service:
+            return f"Could not identify service from provided link. Please make sure it is supported."
+        if source_service:
+            track_info = source_service.get_track_info(link)
+
+        # convert to all other services by looping through all services that are not source
+        # and adding to results array
+        # i could do the below more succinctly w list comprehension... think about it later
+        if target_service == 'all':
+            results = []
+            for service_name in self.service_map.keys():
+                if service_name in link:
+                    continue  # skip the source service
+                target_class, *target_args = self.service_map.get(service_name, (None,))
+                target_match = target_class(*target_args)
                 if track_info:
                     info = target_match.get_url(track_info)
-                    return f"{info['title']} by {info['artist']}: {info['url']}"
+                    results.append(f"{service_name}: {info['title']} by {info['artist']}: {info['url']}")
+            return results
+        else:
+            if track_info:
+                target_class, *target_args = self.service_map.get(target_service, (None,))
+                target_match = target_class(*target_args)
+                info = target_match.get_url(track_info)
+                return f"{info['title']} by {info['artist']}: {info['url']}"
 
-        return "Something went wrong during conversion."
+        return f"Something went wrong during conversion."
+    
+
