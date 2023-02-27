@@ -50,4 +50,4 @@ class Spotify:
             _, _, track_id = uri.rpartition(':')
             return {'title': title, 'artist': artist, 'url': f"https://open.spotify.com/track/{track_id}"}
         else:
-            return 'Track not found.'
+            return f"Could not find track {title} by {artist} on Spotify."
