@@ -2,6 +2,7 @@ from linktune.api.tidal import Tidal
 from linktune.api.spotify import Spotify
 from linktune.api.deezer import Deezer
 from linktune.api.applemusic import AppleMusic
+from linktune.api.youtube import YouTube
 from linktune.config.config import SPOTIPY_CLIENT_ID, SPOTIPY_CLIENT_SECRET
 
 def search_track(artist, title, service='all'):
@@ -12,6 +13,7 @@ def search_track(artist, title, service='all'):
         'tidal': (Tidal,),
         'deezer': (Deezer,),
         'apple': (AppleMusic,),
+        'youtube': (YouTube,),
     }
 
     if service == 'all':

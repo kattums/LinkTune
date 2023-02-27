@@ -42,4 +42,4 @@ class AppleMusic:
 
         link, artist, title = data['trackViewUrl'], data['artistName'], data['trackName']
 
-        return f'{title} ' 'by ' f'{artist}'': ' f'{link}'
+        return {'title': title, 'artist': artist, 'url': link}

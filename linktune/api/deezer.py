@@ -37,4 +37,4 @@ class Deezer:
         
         link = data['link']
 
-        return f"info: {title} by {artist}, url: {link}"
+        return {'title': title, 'artist': artist, 'url': link}

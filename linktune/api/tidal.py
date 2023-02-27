@@ -28,5 +28,8 @@ class Tidal:
             artist = info['artist']
         query = f"{title} {artist}"
 
+        result = None
         result = self.tidal.search(query, search_type='tracks', limit=1)
-        return f"info: {title} by {artist}, url: {result['items'][0]['url']}"
+        if len(result['items']) > 0:
+            return {'title': title, 'artist': artist, 'url': {result['items'][0]['url']}}
+        return f"Could not find track {title} by {artist} on Tidal."
