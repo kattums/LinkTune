@@ -46,7 +46,7 @@ or use shorthand options, e.g.:
 Omitting `--service` will return the track on all services.
 
 ## Installation
-**tbd**
+`pip install linktune`
 
 ### Get a Spotify API key
 This app uses the Spotify API, which requires the use of a Spotify client ID and client secret to authenticate API requests. You can generate these for free by creating a Spotify account and navigating to `https://developer.spotify.com/dashboard/applications`.
@@ -57,4 +57,3 @@ You can then set your local environment variables for `SPOTIPY_CLIENT_ID` and `S
     export SPOTIPY_CLIENT_SECRET=<your_client_secret>
 
 These environment variables will be read from `config.py`.
-
