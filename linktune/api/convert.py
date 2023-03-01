@@ -48,8 +48,10 @@ class Convert:
             if track_info:
                 target_class, *target_args = self.service_map.get(target_service, (None,))
                 target_match = target_class(*target_args)
+                test = []
                 info = target_match.get_url(track_info)
-                return f"{info['title']} by {info['artist']}: {info['url']}"
+                test.append(f"{target_service}: {info['url']}")
+                return {'title': track_info['title'], 'artist': track_info['artist'], 'url': test}
 
         return f"Something went wrong during conversion."
     
