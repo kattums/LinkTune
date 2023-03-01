@@ -34,16 +34,16 @@ class Convert:
         # and adding to results array
         # i could do the below more succinctly w list comprehension... think about it later
         if target_service == 'all':
-            results = []
+            urls = []
             for service_name in self.service_map.keys():
                 if service_name in link:
                     continue  # skip the source service
                 target_class, *target_args = self.service_map.get(service_name, (None,))
                 target_match = target_class(*target_args)
                 if track_info:
-                    info = target_match.get_url(track_info)
-                    results.append(f"{service_name}: {info['title']} by {info['artist']}: {info['url']}")
-            return results
+                    info = target_match.get_url(track_info) # change each API get_url to return service as well
+                    urls.append(f"{service_name}: {info['url']}")
+            return {'title': track_info['title'], 'artist': track_info['artist'], 'url': urls}
         else:
             if track_info:
                 target_class, *target_args = self.service_map.get(target_service, (None,))
@@ -53,4 +53,9 @@ class Convert:
 
         return f"Something went wrong during conversion."
     
-
+    def pretty_print(self, results):
+        artist, title, urls = results['artist'], results['title'], results['url']
+        pretty_results = f"{artist} - {title}\n"
+        for url in urls:
+            pretty_results += f"{url}\n"
+        return pretty_results.strip()

@@ -6,10 +6,10 @@ def convert(args):
     service, link = args.target, args.link
 
     # call convert_link function from convert api
-    converted_link = Convert().convert_link(link, service)
-    if converted_link is None:
+    converted_result = Convert().convert_link(link, service)
+    if converted_result is None:
         print(f"Unable to find information for {link} on {service}")
-    print(converted_link)
+    print(Convert().pretty_print(converted_result))
 
 def search(args):
     artist, title, service = args.artist, args.title, args.service
