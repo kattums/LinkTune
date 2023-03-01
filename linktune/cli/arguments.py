@@ -8,7 +8,7 @@ def create_parser():
     # parser for convert command
     convert_parser = subparsers.add_parser('convert', help='Convert a music link to that of another music service.')
     convert_parser.add_argument('link', help='The link to be converted.')
-    convert_parser.add_argument('target', help='The target music service to convert to.')
+    convert_parser.add_argument('target', nargs='?', default='all', help='The target music service to convert to.')
     convert_parser.set_defaults(func=convert)
 
     # parser for search command
