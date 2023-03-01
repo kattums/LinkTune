@@ -17,7 +17,7 @@ class Spotify:
         artists = [artist['name'] for artist in track['artists']]
         title = track['name']
 
-        return {'artist': artists, 'title': title}
+        return {'artist': artists[0], 'title': title}
 
     def _get_track_id(self, track_url):
         track_id = None
