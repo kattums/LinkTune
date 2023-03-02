@@ -34,25 +34,19 @@ class Convert:
         # and adding to results array
         # i could do the below more succinctly w list comprehension... think about it later
         service_urls = []
-        if target_service == 'all':
-            for service_name in self.service_map.keys():
-                if service_name in link:
-                    continue  # skip the source service
-                target_class, *target_args = self.service_map.get(service_name, (None,))
-                target_match = target_class(*target_args)
-                if track_info:
-                    info = target_match.get_service_url(track_info)
-                    service_urls.append({info['service']: info['url']})
-            return {'title': track_info['title'], 'artist': track_info['artist'], 'service_url': service_urls}
-        else:
+        services_to_convert = self.service_map.keys() if target_service == 'all' else [target_service]
+        for service_name in services_to_convert:
+            if service_name in link:
+                continue  # skip the source service
+            target_class, *target_args = self.service_map.get(service_name, (None,))
+            target_match = target_class(*target_args)
             if track_info:
-                target_class, *target_args = self.service_map.get(target_service, (None,))
-                target_match = target_class(*target_args)
                 info = target_match.get_service_url(track_info)
                 service_urls.append({info['service']: info['url']})
-                return {'title': track_info['title'], 'artist': track_info['artist'], 'service_url': service_urls}
-
-        return f"Something went wrong during conversion."
+        if service_urls:
+            return {'title': track_info['title'], 'artist': track_info['artist'], 'service_url': service_urls}
+        
+        return f"Could not convert link to {target_service}."
     
     def pretty_print(self, results):
         artist, title, service_urls = results['artist'], results['title'], results['service_url']
