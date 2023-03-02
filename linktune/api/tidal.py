@@ -26,11 +26,11 @@ class Tidal:
             artist = info['artist'][0]
         else:
             artist = info['artist']
-        query = f"{title} {artist}"
+        query = f"{title}"
 
         result = None
         result = self.tidal.search(query, search_type='tracks', limit=1)
-        # FOUND A buggg! need to check top track better, getting wrong result for Everybody's Gotta Live
+        # BUG need to check top track better, getting wrong result for Everybody's Gotta Live. temp fix just search track
 
         # check if we have any results, and if so take the top result returned by the API
         if len(result['items']) > 0:
