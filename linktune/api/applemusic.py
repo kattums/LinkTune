@@ -27,6 +27,7 @@ class AppleMusic:
     
     def get_service_url(self, info):
         title = info['title']
+        
         if isinstance(info['artist'], list):
             artist = info['artist'][0]
         else:
@@ -40,6 +41,6 @@ class AppleMusic:
         # get json response of matching tracks
         data = res.json()['results'][0]
 
-        link, artist, title = data['trackViewUrl'], data['artistName'], data['trackName']
+        link, artist, title = data['trackViewUrl'], [data['artistName']], data['trackName']
 
         return {'service': 'Apple Music', 'title': title, 'artist': artist, 'url': link}

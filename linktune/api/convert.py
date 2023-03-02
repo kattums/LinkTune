@@ -7,7 +7,7 @@ from linktune.config.config import SPOTIPY_CLIENT_ID, SPOTIPY_CLIENT_SECRET
 
 class Convert:
     def __init__(self):
-        # Initialise a map of the service apis
+        # Initialise a map of the service apis with any associated credentials
         self.service_map = {
             'spotify': (Spotify, SPOTIPY_CLIENT_ID, SPOTIPY_CLIENT_SECRET),
             'tidal': (Tidal,),
@@ -44,19 +44,21 @@ class Convert:
                 info = target_match.get_service_url(track_info)
                 service_urls.append({info['service']: info['url']})
         if service_urls:
-            return {'title': track_info['title'], 'artist': track_info['artist'], 'service_url': service_urls}
+            return {'title': track_info['title'], 'artist': track_info.get('artist'), 'service_url': service_urls}
         
         return f"Could not convert link to {target_service}."
     
+    # pretty_print takes a result from convert_link() and formats for display in the CLI
     def pretty_print(self, results):
         artist, title, service_urls = results['artist'], results['title'], results['service_url']
+        
+        
         pretty_results = f"{title} by {artist}\n"
         for service_url in service_urls:
             for service, url in service_url.items():
                 pretty_results += f"{service}: {url}\n"
         return pretty_results.strip()
 
-# TODO: find a way to manage all vs single service query a bit nicer.
 # TODO: unify the results we get from each music service
 # TODO: implement services into a single super class
 # TODO: change Convert() to not be a class anymore

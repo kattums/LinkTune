@@ -16,28 +16,39 @@ def search_track(artist, title, service='all'):
         'youtube': (YouTube,),
     }
 
-    results = []
+    results = {}
+    service_urls = []
+    found_artist = found_title = False
 
-    if service == 'all':
-        for service in service_map:
-            service_class, *service_args = service_map.get(service, (None,))
-            api = service_class(*service_args)
-            results.append(f"{service}: {api.get_url(info)}")
-        return results
-
-    elif service in service_map:
-        service_class, *service_args = service_map.get(service, (None,))
+    search_service = service_map.keys() if service == 'all' else [service]
+    for service_name in search_service:
+        service_class, *service_args = service_map.get(service_name, (None,))
         api = service_class(*service_args)
-        results.append(f"'service': {service}, {api.get_url(info)}")
+        details = api.get_service_url(info)
+        if details:
+            if not found_artist:
+                track_artist = details.get('artist')
+                found_artist = True
+            if not found_title:
+                track_title = details.get('title')
+                found_title = True
+            service_urls.append({details['service']: details['url']})
+    results.update({'service_url': service_urls})
+    if results:
+        results['artist'] = track_artist
+        results['title'] = track_title
+        print(results)
         return results
     else:
         return "Service not supported"
 
-# TODO: implement pretty_print for search
-# TODO: I think I should make it so each service returns its own service name with its results...
-# def pretty_print(results):
-#     artist, title, urls = results['artist'], results['title'], results['url']
-#     pretty_results = f"{artist} - {title}\n"
-#     for url in urls:
-#         pretty_results += f"{url}\n"
-#     return pretty_results.strip()
+def pretty_print(results):
+    artists, title, service_urls = results['artist'], results['title'], results['service_url']
+    # List comprehension to correctly format for multiple artists, else get the single artist element in the list
+    artist = f"{', '.join(artists)}" if len(artists) > 1 else artists[0]
+
+    pretty_results = f"{title} by {artist}\n"
+    for service_url in service_urls:
+        for service, url in service_url.items():
+            pretty_results += f"{service}: {url}\n"
+    return pretty_results.strip()

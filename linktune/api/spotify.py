@@ -36,7 +36,7 @@ class Spotify:
         # remove extra characters present in track title
         title = re.sub("\(.*?\)|\[.*?\]","",title).rstrip()
 
-        # TODO: find less hacky way of solving artists being returned as a list by some platforms
+        # TODO: find less hacky way of solving artists being returned as a list by some platforms and include extra artists in query
         if isinstance(info['artist'], list):
             artist = info['artist'][0]
         else:
@@ -46,8 +46,14 @@ class Spotify:
         result = self.sp.search(query, limit=1, type='track')
 
         if result['tracks']['total'] > 0:
-            uri = result['tracks']['items'][0]['uri']
-            _, _, track_id = uri.rpartition(':')
-            return {'service': 'Spotify', 'title': title, 'artist': artist, 'url': f"https://open.spotify.com/track/{track_id}"}
+            # get top track from results
+            top_track = result['tracks']['items'][0]
+            track_artist = []
+            for artist in top_track['artists']:
+                track_artist.append(artist['name'])
+
+            track_title = top_track['name']
+            track_url = top_track['external_urls']['spotify']
+            return {'service': 'Spotify', 'title': track_title, 'artist': track_artist, 'url': track_url}
         else:
             return f"Could not find track {title} by {artist} on Spotify."

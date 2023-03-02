@@ -41,13 +41,14 @@ class YouTube:
             artist = info['artist']
 
         # store top result of search
-        res = self.youtube.search(f"{artist} {title}", filter = 'songs')[0]
-        track_id = res['videoId']
-        title = res['title']
-        # TODO: edit artist to actually find all artist names in the array but this works for now
-        artist = res['artists'][0]['name']
+        top_track = self.youtube.search(f"{artist} {title}", filter = 'songs')[0]
+        track_id = top_track['videoId']
+        track_title = top_track['title']
+        track_artist = []
+        for artist in top_track['artists']:
+            track_artist.append(artist['name'])
 
-        return {'service': 'YouTube Music', 'title': title, 'artist': artist, 'url': f"https://music.youtube.com/watch?v={track_id}"}
+        return {'service': 'YouTube Music', 'title': track_title, 'artist': track_artist, 'url': f"https://music.youtube.com/watch?v={track_id}"}
 # testing using regular youtube links from unofficial accounts... actually does work but really wouldnt be that great for non-verified artists
 # I could make it take the track title from youtube and use that as the search query for other services?
 # id = 'xAok29V8Bf4'

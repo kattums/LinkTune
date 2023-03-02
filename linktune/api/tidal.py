@@ -30,6 +30,14 @@ class Tidal:
 
         result = None
         result = self.tidal.search(query, search_type='tracks', limit=1)
+        # FOUND A buggg! need to check top track better, getting wrong result for Everybody's Gotta Live
+
+        # check if we have any results, and if so take the top result returned by the API
         if len(result['items']) > 0:
-            return {'service': 'Tidal', 'title': title, 'artist': artist, 'url': result['items'][0]['url']}
+            top_track = result['items'][0]
+            track_artist = []
+            # we loop through artists to handle the case where there are multiple artists for one song
+            for artist in top_track['artists']:
+                track_artist.append(artist['name'])
+            return {'service': 'Tidal', 'title': top_track['title'], 'artist': track_artist, 'url': top_track['url']}
         return f"Could not find track {title} by {artist} on Tidal."

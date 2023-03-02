@@ -33,8 +33,10 @@ class Deezer:
         response = requests.get(query)
         response.raise_for_status()
 
-        data = response.json()['data'][0]
+        top_track = response.json()['data'][0]
+        track_title = top_track['title']
+        track_link = top_track['link']
+        track_artists = [top_track['artist']]
+        track_artist = [artist['name'] for artist in track_artists]
         
-        link = data['link']
-
-        return {'service': 'Deezer', 'title': title, 'artist': artist, 'url': link}
+        return {'service': 'Deezer', 'title': track_title, 'artist': track_artist, 'url': track_link}
