@@ -33,7 +33,7 @@ class YouTube:
 
         return track_id
     
-    def get_url(self, info):
+    def get_service_url(self, info):
         title = info['title']
         if isinstance(info['artist'], list):
             artist = info['artist'][0]
@@ -47,7 +47,7 @@ class YouTube:
         # TODO: edit artist to actually find all artist names in the array but this works for now
         artist = res['artists'][0]['name']
 
-        return {'title': title, 'artist': artist, 'url': f"https://music.youtube.com/watch?v={track_id}"}
+        return {'service': 'YouTube Music', 'title': title, 'artist': artist, 'url': f"https://music.youtube.com/watch?v={track_id}"}
 # testing using regular youtube links from unofficial accounts... actually does work but really wouldnt be that great for non-verified artists
 # I could make it take the track title from youtube and use that as the search query for other services?
 # id = 'xAok29V8Bf4'

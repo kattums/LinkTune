@@ -25,7 +25,7 @@ class Deezer:
             return "Could not locate track id"
         return track_id
     
-    def get_url(self, info):
+    def get_service_url(self, info):
         title = info['title']
         artist = info['artist']
 
@@ -37,4 +37,4 @@ class Deezer:
         
         link = data['link']
 
-        return {'title': title, 'artist': artist, 'url': link}
+        return {'service': 'Deezer', 'title': title, 'artist': artist, 'url': link}

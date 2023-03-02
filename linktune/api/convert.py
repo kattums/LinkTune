@@ -33,31 +33,36 @@ class Convert:
         # convert to all other services by looping through all services that are not source
         # and adding to results array
         # i could do the below more succinctly w list comprehension... think about it later
+        service_urls = []
         if target_service == 'all':
-            urls = []
             for service_name in self.service_map.keys():
                 if service_name in link:
                     continue  # skip the source service
                 target_class, *target_args = self.service_map.get(service_name, (None,))
                 target_match = target_class(*target_args)
                 if track_info:
-                    info = target_match.get_url(track_info) # change each API get_url to return service as well
-                    urls.append(f"{service_name}: {info['url']}")
-            return {'title': track_info['title'], 'artist': track_info['artist'], 'url': urls}
+                    info = target_match.get_service_url(track_info)
+                    service_urls.append({info['service']: info['url']})
+            return {'title': track_info['title'], 'artist': track_info['artist'], 'service_url': service_urls}
         else:
             if track_info:
                 target_class, *target_args = self.service_map.get(target_service, (None,))
                 target_match = target_class(*target_args)
-                test = []
-                info = target_match.get_url(track_info)
-                test.append(f"{target_service}: {info['url']}")
-                return {'title': track_info['title'], 'artist': track_info['artist'], 'url': test}
+                info = target_match.get_service_url(track_info)
+                service_urls.append({info['service']: info['url']})
+                return {'title': track_info['title'], 'artist': track_info['artist'], 'service_url': service_urls}
 
         return f"Something went wrong during conversion."
     
     def pretty_print(self, results):
-        artist, title, urls = results['artist'], results['title'], results['url']
-        pretty_results = f"{artist} - {title}\n"
-        for url in urls:
-            pretty_results += f"{url}\n"
+        artist, title, service_urls = results['artist'], results['title'], results['service_url']
+        pretty_results = f"{title} by {artist}\n"
+        for service_url in service_urls:
+            for service, url in service_url.items():
+                pretty_results += f"{service}: {url}\n"
         return pretty_results.strip()
+
+# TODO: find a way to manage all vs single service query a bit nicer.
+# TODO: unify the results we get from each music service
+# TODO: implement services into a single super class
+# TODO: change Convert() to not be a class anymore

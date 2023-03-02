@@ -31,7 +31,7 @@ class Spotify:
 
         return track_id
 
-    def get_url(self, info):
+    def get_service_url(self, info):
         title = info['title']
         # remove extra characters present in track title
         title = re.sub("\(.*?\)|\[.*?\]","",title).rstrip()
@@ -48,6 +48,6 @@ class Spotify:
         if result['tracks']['total'] > 0:
             uri = result['tracks']['items'][0]['uri']
             _, _, track_id = uri.rpartition(':')
-            return {'title': title, 'artist': artist, 'url': f"https://open.spotify.com/track/{track_id}"}
+            return {'service': 'Spotify', 'title': title, 'artist': artist, 'url': f"https://open.spotify.com/track/{track_id}"}
         else:
             return f"Could not find track {title} by {artist} on Spotify."

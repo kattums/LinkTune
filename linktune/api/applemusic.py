@@ -25,7 +25,7 @@ class AppleMusic:
             return "Could not locate track id"
         return track_id
     
-    def get_url(self, info):
+    def get_service_url(self, info):
         title = info['title']
         if isinstance(info['artist'], list):
             artist = info['artist'][0]
@@ -42,4 +42,4 @@ class AppleMusic:
 
         link, artist, title = data['trackViewUrl'], data['artistName'], data['trackName']
 
-        return {'title': title, 'artist': artist, 'url': link}
+        return {'service': 'Apple Music', 'title': title, 'artist': artist, 'url': link}

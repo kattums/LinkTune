@@ -20,7 +20,7 @@ class Tidal:
         track_id = track_url.split('/')[-1]
         return track_id
 
-    def get_url(self, info):
+    def get_service_url(self, info):
         title = info['title']
         if isinstance(info['artist'], list):
             artist = info['artist'][0]
@@ -31,5 +31,5 @@ class Tidal:
         result = None
         result = self.tidal.search(query, search_type='tracks', limit=1)
         if len(result['items']) > 0:
-            return {'title': title, 'artist': artist, 'url': result['items'][0]['url']}
+            return {'service': 'Tidal', 'title': title, 'artist': artist, 'url': result['items'][0]['url']}
         return f"Could not find track {title} by {artist} on Tidal."
