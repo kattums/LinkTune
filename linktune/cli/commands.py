@@ -14,6 +14,6 @@ def convert(args):
     return
 
 def search(args):
-    artist, title, service = args.artist, args.title, args.service
-    print(pretty_print(search_track(artist, title, service)))
+    artist, title, service, album = args.artist, args.title, args.service, args.album
+    print(pretty_print(search_track(artist, title, service, album)))
     return

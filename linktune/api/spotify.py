@@ -46,7 +46,7 @@ class Spotify:
 
         if 'album' in info:
             query += f" album:{info['album']}"
-
+            
         result = self.sp.search(query, limit=1, type='track')
 
         if result['tracks']['total'] > 0:

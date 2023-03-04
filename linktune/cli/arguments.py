@@ -16,6 +16,7 @@ def create_parser():
     search_parser.add_argument('--artist', '-a', help='Artist name')
     search_parser.add_argument('--title', '-t', help='Track title')
     search_parser.add_argument('--service', '-s', choices=['spotify', 'tidal', 'deezer', 'apple', 'youtube', 'all'], default='all', help='The music service to search.')
+    search_parser.add_argument('--album', '-al', nargs='?', default=None, const='', help='Album name')
     search_parser.set_defaults(func=search)
 
     return parser

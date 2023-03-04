@@ -33,6 +33,7 @@ class Tidal:
 
         result = None
         result = self.tidal.search(query, search_type='tracks', limit=1)
+ # BUG: Tidal's top result when searching with album specified isnt right.
 
         # check if we have any results, and if so take the top result returned by the API
         if len(result['items']) > 0:

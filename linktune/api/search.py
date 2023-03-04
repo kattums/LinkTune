@@ -5,8 +5,10 @@ from linktune.api.applemusic import AppleMusic
 from linktune.api.youtube import YouTube
 from linktune.config.config import SPOTIPY_CLIENT_ID, SPOTIPY_CLIENT_SECRET
 
-def search_track(artist, title, service='all'):
+def search_track(artist, title, service='all', album=None):
     info = {'title': title, 'artist': artist}
+    if album is not None:
+        info['album'] = album
 
     service_map = {
         'spotify': (Spotify, SPOTIPY_CLIENT_ID, SPOTIPY_CLIENT_SECRET),
