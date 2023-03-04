@@ -58,7 +58,3 @@ class Convert:
             for service, url in service_url.items():
                 pretty_results += f"{service}: {url}\n"
         return pretty_results.strip()
-
-# TODO: unify the results we get from each music service
-# TODO: implement services into a single super class
-# TODO: change Convert() to not be a class anymore
