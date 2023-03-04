@@ -16,8 +16,9 @@ class Spotify:
         track = self.sp.track(track_id)
         artists = [artist['name'] for artist in track['artists']]
         title = track['name']
+        album = track['album']['name']
 
-        return {'artist': artists[0], 'title': title}
+        return {'artist': artists[0], 'title': title, 'album': album}
 
     def _get_track_id(self, track_url):
         track_id = None
@@ -32,16 +33,19 @@ class Spotify:
         return track_id
 
     def get_service_url(self, info):
-        title = info['title']
         # remove extra characters present in track title
-        title = re.sub("\(.*?\)|\[.*?\]","",title).rstrip()
+        title = re.sub("\(.*?\)|\[.*?\]","",info['title']).rstrip()
 
         # TODO: find less hacky way of solving artists being returned as a list by some platforms and include extra artists in query
         if isinstance(info['artist'], list):
             artist = info['artist'][0]
         else:
             artist = info['artist']
-        query = f"{title} artist:{artist}"
+
+        query = f"{info['title']} artist:{artist}"
+
+        if 'album' in info:
+            query += f" album:{info['album']}"
 
         result = self.sp.search(query, limit=1, type='track')
 

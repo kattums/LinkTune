@@ -28,7 +28,7 @@ class Convert:
         if not source_service:
             return f"Could not identify service from provided link. Please make sure it is supported."
         if source_service:
-            track_info = source_service.get_track_info(link)
+            source_track_info = source_service.get_track_info(link)
 
         # convert to all other services by looping through all services that are not source
         # and adding to results array
@@ -40,18 +40,19 @@ class Convert:
                 continue  # skip the source service
             target_class, *target_args = self.service_map.get(service_name, (None,))
             target_match = target_class(*target_args)
-            if track_info:
-                info = target_match.get_service_url(track_info)
-                service_urls.append({info['service']: info['url']})
+            if source_track_info:
+                target_info = target_match.get_service_url(source_track_info)
+                service_urls.append({target_info['service']: target_info['url']})
         if service_urls:
-            return {'title': track_info['title'], 'artist': track_info.get('artist'), 'service_url': service_urls}
+            return {'title': source_track_info['title'], 'artist': source_track_info.get('artist'), 'service_url': service_urls}
         
         return f"Could not convert link to {target_service}."
     
     # pretty_print takes a result from convert_link() and formats for display in the CLI
     def pretty_print(self, results):
         artist, title, service_urls = results['artist'], results['title'], results['service_url']
-        
+        if isinstance(artist, list):
+            artist = f"{', '.join(artist)}" if len(artist) > 1 else artist[0]
         
         pretty_results = f"{title} by {artist}\n"
         for service_url in service_urls:

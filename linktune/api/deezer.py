@@ -15,12 +15,12 @@ class Deezer:
 
         title = data['title']
         artist = data['artist']['name']
+        album = data['album']['title']
 
-        return {'artist': artist, 'title': title}
+        return {'artist': artist, 'title': title, 'album': album}
 
     def _get_track_id(self, track_url):
         _, _, track_id = track_url.rpartition('/')
-        print(f'Track id is {track_id}')
         if not track_id:
             return "Could not locate track id"
         return track_id
@@ -29,7 +29,10 @@ class Deezer:
         title = info['title']
         artist = info['artist']
 
-        query = f'{self.base_url}/search?q=artist:"{artist}" track:"{title}"'
+        query = f'{self.base_url}/search?q=artist:"{artist}"track:"{title}"'
+        if 'album' in info:
+            album = info['album']
+            query += f'album:"{album}"'
         response = requests.get(query)
         response.raise_for_status()
 

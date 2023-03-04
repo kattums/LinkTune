@@ -12,17 +12,18 @@ class YouTube:
         print('Searching for track...')
         track_id = self._get_track_id(track_url)
         if not track_id:
-            return 'Could not identify YouTube Music track ID from url.'
+            return 'Could not identify YouTube Music track ID from url.' # this error doesnt work need to fix
 
-        track = self.youtube.get_song(track_id)
+        track = self.youtube.search(track_id)[0]
         # returns dictionary with song metadata
-        artist = track['videoDetails']['author']
-        title = track['videoDetails']['title']
+        artist = [artist['name'] for artist in track['artists']]
+        title = track['title']
+        album = track['album']['name']
 
         # TODO: implement integration with regular YouTube
         # external_video_id = track['microformat']
 
-        return {'artist': artist, 'title': title}
+        return {'artist': artist, 'title': title, 'album': album}
 
 # https://music.youtube.com/watch?v=tqxRidAWER8
     
@@ -40,6 +41,9 @@ class YouTube:
         else:
             artist = info['artist']
 
+        query = f"{artist} {title}"
+        if 'album' in info:
+            query += f" {info['album']}"
         # store top result of search
         top_track = self.youtube.search(f"{artist} {title}", filter = 'songs')[0]
         track_id = top_track['videoId']

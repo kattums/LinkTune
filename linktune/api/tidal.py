@@ -12,8 +12,9 @@ class Tidal:
         track = self.tidal.get_track(track_id)
         title = track['title']
         artist = track['artist']['name']
+        album = track['album']['title']
 
-        return {'artist': artist, 'title': title}
+        return {'artist': artist, 'title': title, 'album': album}
 
     def _get_track_id(self, track_url):
         track_id = None
@@ -27,6 +28,8 @@ class Tidal:
         else:
             artist = info['artist']
         query = f"{title}&artist={artist}"
+        if 'album' in info:
+            query += f"&album={info['album']}"
 
         result = None
         result = self.tidal.search(query, search_type='tracks', limit=1)

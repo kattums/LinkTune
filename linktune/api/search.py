@@ -37,7 +37,6 @@ def search_track(artist, title, service='all'):
     if results:
         results['artist'] = track_artist
         results['title'] = track_title
-        print(results)
         return results
     else:
         return "Service not supported"

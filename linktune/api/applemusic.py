@@ -9,7 +9,7 @@ class AppleMusic:
 
         query = f'{self.itunes_base}lookup?id={track_id}'
 
-        res = requests.get(query)
+        res = requests.get(query, timeout=2)
         res.raise_for_status()
 
         # get results dict from the json response
@@ -17,7 +17,8 @@ class AppleMusic:
 
         title = data['trackName']
         artist = data['artistName']
-        return {'artist': artist, 'title': title}
+        album = data['collectionName']
+        return {'artist': artist, 'title': title, 'album': album}
 
     def _get_track_id(self, track_url):
         track_id = track_url.split('?i=')[1]
@@ -33,9 +34,12 @@ class AppleMusic:
         else:
             artist = info['artist']
 
-        query = f'{self.itunes_base}search?term={artist}+{title}'
+        query = f"{self.itunes_base}search?term={artist}+{title}"
 
-        res = requests.get(query)
+        if 'album' in info:
+            query += f"+{info['album']}"
+
+        res = requests.get(query, timeout=2)
         res.raise_for_status()
 
         # get json response of matching tracks
