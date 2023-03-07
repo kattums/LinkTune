@@ -8,10 +8,16 @@ class Deezer:
         track_id = self._get_track_id(track_url)
 
         query = f'{self.base_url}/track/{track_id}'
-        response = requests.get(query)
-        response.raise_for_status()
+
+        try:
+            response = requests.get(query)
+            response.raise_for_status()
+        except requests.exceptions.RequestException as e:
+            return f"Could not retrieve track information from Deezer: {str(e)}"
 
         data = response.json()
+        if data['error']:
+            raise SystemExit(f"No results returned for the Deezer url: {track_url}. Please ensure the link is valid.")
 
         title = data['title']
         artist = data['artist']['name']
@@ -33,10 +39,17 @@ class Deezer:
         if 'album' in info:
             album = info['album']
             query += f'album:"{album}"'
+            
         response = requests.get(query)
         response.raise_for_status()
 
-        top_track = response.json()['data'][0]
+        # I think perhaps the better way to handle this is to still return the object but instead of
+        # "url: url" I can put "url: could not find track" into the dict.
+        data = response.json()['data']
+        if not data:
+            return None
+
+        top_track = data[0]
         track_title = top_track['title']
         track_link = top_track['link']
         track_artists = [top_track['artist']]
