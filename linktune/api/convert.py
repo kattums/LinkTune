@@ -44,12 +44,14 @@ class Convert:
                 target_info = target_match.get_service_url(source_track_info)
                 if target_info is None:
                     # need to test this works...
-                    service_urls.append({f'Could not find track on {target_class}'})
-                service_urls.append({target_info['service']: target_info['url']})
+                    service_urls.append({f'{target_class.service_name}': 'Could not locate track.'})
+                # print({target_info['service']: target_info['url']})
+                else:
+                    service_urls.append({target_info['service']: target_info['url']})
         if service_urls:
             return {'title': source_track_info['title'], 'artist': source_track_info.get('artist'), 'service_url': service_urls}
         
-        return f"Could not convert link to {target_service}."
+        return {f'{target_service}': 'Could not convert link.'}
     
     # pretty_print takes a result from convert_link() and formats for display in the CLI
     def pretty_print(self, results):
