@@ -1,6 +1,7 @@
 import requests
 
 class Deezer:
+    service_name = 'Deezer'
     base_url = 'https://api.deezer.com/'
 
     def get_track_info(self, track_url):
@@ -16,9 +17,9 @@ class Deezer:
             return f"Could not retrieve track information from Deezer: {str(e)}"
 
         data = response.json()
-        if data['error']:
-            raise SystemExit(f"No results returned for the Deezer url: {track_url}. Please ensure the link is valid.")
-
+        # print(data)
+        # if 'error' in data:
+        #     raise SystemExit(f"No results returned for the Deezer url: {track_url}. Please ensure the link is valid.")
         title = data['title']
         artist = data['artist']['name']
         album = data['album']['title']

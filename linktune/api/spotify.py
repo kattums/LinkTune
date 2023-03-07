@@ -4,6 +4,7 @@ from spotipy.oauth2 import SpotifyClientCredentials
 from spotipy.cache_handler import MemoryCacheHandler
 
 class Spotify:
+    service_name = 'Spotify'
     def __init__(self, client_id, client_secret):
         self.sp = spotipy.Spotify(auth_manager=SpotifyClientCredentials(client_id=client_id, client_secret=client_secret, cache_handler=MemoryCacheHandler()))
 
@@ -60,4 +61,4 @@ class Spotify:
             track_url = top_track['external_urls']['spotify']
             return {'service': 'Spotify', 'title': track_title, 'artist': track_artist, 'url': track_url}
         else:
-            return f"Could not find track {title} by {artist} on Spotify."
+            return None

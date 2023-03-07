@@ -3,6 +3,7 @@ import requests
 class AppleMusic:
 
     itunes_base = 'https://itunes.apple.com/'
+    service_name = 'Apple Music'
 
     def get_track_info(self, track_url):
         track_id = self._get_track_id(track_url)
@@ -42,9 +43,12 @@ class AppleMusic:
         res = requests.get(query, timeout=2)
         res.raise_for_status()
 
+        data = res.json()
         # get json response of matching tracks
-        data = res.json()['results'][0]
+        if data['results']: 
+            top_track = data['results'][0]
 
-        link, artist, title = data['trackViewUrl'], [data['artistName']], data['trackName']
+            link, artist, title = top_track['trackViewUrl'], [top_track['artistName']], top_track['trackName']
 
-        return {'service': 'Apple Music', 'title': title, 'artist': artist, 'url': link}
+            return {'service': 'Apple Music', 'title': title, 'artist': artist, 'url': link}
+        return None

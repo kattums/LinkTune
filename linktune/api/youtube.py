@@ -5,6 +5,7 @@ import re
 # as long as the id and externalID are the same...
 
 class YouTube:
+    service_name = 'YouTube Music'
     def __init__(self):
         self.youtube = YTMusic()
 

@@ -2,6 +2,7 @@ from tidal_unofficial import TidalUnofficial
 
 
 class Tidal:
+    service_name = 'Tidal'
     def __init__(self):
         self.tidal = TidalUnofficial({'user_agent': 'my_user_agent'})
 
