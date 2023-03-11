@@ -1,7 +1,5 @@
 # Tests for the Spotify module
-
 import pytest 
-import json
 from unittest.mock import MagicMock
 from linktune.api.spotify import Spotify
 
@@ -60,6 +58,7 @@ def test_get_track_info_invalid_track_url(spotify):
     assert spotify.get_track_info('invalid url') == 'Could not identify Spotify track ID'
 
 # test searching spotify to retrieve url
+# TODO: implement tests +/- album
 def test_get_service_url(spotify):
     # mock track info
     track_info = {
