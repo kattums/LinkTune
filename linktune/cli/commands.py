@@ -1,6 +1,5 @@
 from linktune.api.convert import Convert
 from linktune.api.search import search_track, pretty_print
-import sys
 
 def convert(args):
     # get target service and song link from arguments
@@ -14,7 +13,8 @@ def convert(args):
     return
 
 def search(args):
-    args = [arg.lower() for arg in args]
-    artist, title, service, album = args.artist, args.title, args.service, args.album
+    artist, title = args.artist.lower(), args.title.lower()
+    service = args.service.lower() if args.service else None
+    album = args.album.lower() if args.album else None
     print(pretty_print(search_track(artist, title, service, album)))
     return
