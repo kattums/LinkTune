@@ -4,7 +4,7 @@ import sys
 
 def convert(args):
     # get target service and song link from arguments
-    service, link = args.target, args.link
+    service, link = args.target.lower(), args.link
 
     # call convert_link function from convert api
     converted_result = Convert().convert_link(link, service)
@@ -14,6 +14,7 @@ def convert(args):
     return
 
 def search(args):
+    args = [arg.lower() for arg in args]
     artist, title, service, album = args.artist, args.title, args.service, args.album
     print(pretty_print(search_track(artist, title, service, album)))
     return
