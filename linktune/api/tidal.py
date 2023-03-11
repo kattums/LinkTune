@@ -1,5 +1,5 @@
 from tidal_unofficial import TidalUnofficial
-
+import re
 
 class Tidal:
     service_name = 'Tidal'
@@ -24,7 +24,7 @@ class Tidal:
         return track_id
 
     def get_service_url(self, info):
-        title = info['title']
+        title = re.sub("\(.*?\)|\[.*?\]","",info['title']).rstrip()
         if isinstance(info['artist'], list):
             artist = info['artist'][0]
         else:

@@ -1,4 +1,5 @@
 import requests
+import re
 
 class Deezer:
     service_name = 'Deezer'
@@ -33,7 +34,7 @@ class Deezer:
         return track_id
     
     def get_service_url(self, info):
-        title = info['title']
+        title = re.sub("\(.*?\)|\[.*?\]","",info['title']).rstrip()
         artist = info['artist']
 
         query = f'{self.base_url}/search?q=artist:"{artist}"track:"{title}"'
