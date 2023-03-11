@@ -19,7 +19,8 @@ class Tidal:
 
     def _get_track_id(self, track_url):
         track_id = None
-        track_id = track_url.split('/')[-1]
+        if 'tidal' in track_url:
+            track_id = track_url.split('/')[-1]
         return track_id
 
     def get_service_url(self, info):
