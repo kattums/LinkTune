@@ -14,8 +14,8 @@ class YouTube:
         track_id = self._get_track_id(track_url)
         if not track_id:
             return 'Could not identify YouTube Music track ID from url.' # this error doesnt work need to fix
-
-        track = self.youtube.search(track_id)[0]
+        track = self.youtube.search(track_id, filter='songs')[0]
+        print(track)
         # returns dictionary with song metadata
         artist = [artist['name'] for artist in track['artists']]
         title = track['title']
@@ -23,7 +23,6 @@ class YouTube:
 
         # TODO: implement integration with regular YouTube
         # external_video_id = track['microformat']
-
         return {'artist': artist, 'title': title, 'album': album}
 
 # https://music.youtube.com/watch?v=tqxRidAWER8
