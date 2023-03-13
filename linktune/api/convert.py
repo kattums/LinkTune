@@ -29,6 +29,7 @@ class Convert:
             return f"Could not identify service from provided link. Please make sure it is supported."
         if source_service:
             source_track_info = source_service.get_track_info(link)
+            source_track_info['query_type'] = 'convert'
 
         # convert to all other services by looping through all services that are not source
         # and adding to results array
