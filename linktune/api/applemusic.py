@@ -10,8 +10,11 @@ class AppleMusic:
 
         query = f'{self.itunes_base}lookup?id={track_id}'
 
-        res = requests.get(query, timeout=2)
-        res.raise_for_status()
+        try:
+            res = requests.get(query, timeout=2)
+            res.raise_for_status()
+        except requests.Timeout:
+            raise Exception(f"API request timed out.")
 
         # get results dict from the json response
         data = res.json()['results'][0]
@@ -39,9 +42,12 @@ class AppleMusic:
 
         if 'album' in info:
             query += f"+{info['album']}"
-
-        res = requests.get(query, timeout=2)
-        res.raise_for_status()
+        
+        try:
+            res = requests.get(query, timeout=2)
+            res.raise_for_status()
+        except requests.Timeout:
+            raise Exception(f"API request timed out.")
 
         data = res.json()
         # get json response of matching tracks
