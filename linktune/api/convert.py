@@ -4,6 +4,8 @@ from linktune.api.deezer import Deezer
 from linktune.api.applemusic import AppleMusic
 from linktune.api.youtube import YouTube
 from linktune.config.config import SPOTIPY_CLIENT_ID, SPOTIPY_CLIENT_SECRET
+from linktune.utils.exceptions import *
+import requests
 
 class Convert:
     def __init__(self):
@@ -26,10 +28,11 @@ class Convert:
                 source_service = service_tuple[0](*service_tuple[1:])
                 break
         if not source_service:
-            return f"Could not identify service from provided link. Please make sure it is supported."
-        if source_service:
-            source_track_info = source_service.get_track_info(link)
-            source_track_info['query_type'] = 'convert'
+            raise ServiceNotFoundException(f"Could not identify service from provided link. Please make sure it is supported.")
+        
+        # TODO: error check for get_track_info
+        source_track_info = source_service.get_track_info(link)
+        source_track_info['query_type'] = 'convert'
 
         # convert to all other services by looping through all services that are not source
         # and adding to results array
@@ -42,17 +45,17 @@ class Convert:
             target_class, *target_args = self.service_map.get(service_name, (None,))
             target_match = target_class(*target_args)
             if source_track_info:
-                target_info = target_match.get_service_url(source_track_info)
-                if target_info is None:
-                    # need to test this works...
-                    service_urls.append({f'{target_class.service_name}': 'Could not locate track.'})
-                # print({target_info['service']: target_info['url']})
-                else:
+                try:
+                    target_info = target_match.get_service_url(source_track_info)
                     service_urls.append({target_info['service']: target_info['url']})
-        if service_urls:
-            return {'title': source_track_info['title'], 'artist': source_track_info.get('artist'), 'service_url': service_urls}
-        
-        return {f'{target_service}': 'Could not convert link.'}
+                except requests.Timeout as e:
+                    service_urls.append({f'{target_class.service_name}': str(e)})
+                except NoResultsReturnedException as e:
+                    service_urls.append({f'{target_class.service_name}': str(e)})
+                except TrackNotFoundException:
+                    service_urls.append({f'{target_class.service_name}': str(e)})
+
+        return {'title': source_track_info['title'], 'artist': source_track_info.get('artist'), 'service_url': service_urls}
     
     # pretty_print takes a result from convert_link() and formats for display in the CLI
     def pretty_print(self, results):
