@@ -59,7 +59,7 @@ class Tidal:
             # check if top_track is empty after conclusion of the loop, then return according to query_type.
             if top_track == None:
                 if query_type == 'search':
-                    raise TrackNotFoundOnAlbumException(f'Could not find track on {album}. To search across all albums, omit the album argument.') 
+                    raise TrackNotFoundOnAlbumException(f"Could not find track on the album '{album}'. To search across all albums, omit the album argument.") 
                 else: # if query_type != search, return the top track that matches artist and title.
                     for item in results['items']:
                         if artist.lower() in item['artist']['name'].lower() and title.lower() in item['title'].lower():
