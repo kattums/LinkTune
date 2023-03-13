@@ -9,6 +9,10 @@ def search_track(artist, title, service='all', album=None):
     info = {'title': title, 'artist': artist}
     if album is not None:
         info['album'] = album
+        
+    # set query_type to 'search' before passing info to get_service_url
+    info['query_type'] = 'search'
+    print(info)
 
     service_map = {
         'spotify': (Spotify, SPOTIPY_CLIENT_ID, SPOTIPY_CLIENT_SECRET),
