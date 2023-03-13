@@ -12,16 +12,22 @@ def convert(args):
         converted_result = Convert().convert_link(link, service)
         print(Convert().pretty_print(converted_result))
     except ServiceNotFoundException as e:
-        print(e)
+        print(str(e))
         
-    if converted_result is None: # this needs some refactoring
+    if converted_result is None: # TODO: this needs some refactoring
         print(f"Unable to find information for {link} on {service}")
-        
-    return
+
 
 def search(args):
     artist, title = args.artist.lower(), args.title.lower()
     service = args.service.lower() if args.service else None
     album = args.album.lower() if args.album else None
-    print(pretty_print(search_track(artist, title, service, album)))
-    return
+    result = {}
+    
+    try:
+        result = search_track(artist, title, service, album)
+        print(pretty_print(result))
+    except ServiceNotFoundException as e:
+        print(str(e))
+    except TrackNotFoundOnAlbumException as e:
+        print(str(e))
