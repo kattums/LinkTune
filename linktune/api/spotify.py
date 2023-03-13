@@ -1,5 +1,7 @@
 import spotipy
 import re
+import requests
+from linktune.utils.exceptions import *
 from spotipy.oauth2 import SpotifyClientCredentials
 from spotipy.cache_handler import MemoryCacheHandler
 
@@ -47,18 +49,20 @@ class Spotify:
 
         if 'album' in info:
             query += f" album:{info['album']}"
-            
-        result = self.sp.search(query, limit=1, type='track')
+        
+        try: 
+            result = self.sp.search(query, limit=1, type='track')
+        except requests.Timeout:
+            raise Exception(f"API request timed out.")
+        if len(result['tracks']['items']) < 1:
+            raise NoResultsReturnedException(f"No results found for {title} by {artist}.")
 
-        if result['tracks']['total'] > 0:
-            # get top track from results
-            top_track = result['tracks']['items'][0]
-            track_artist = []
-            for artist in top_track['artists']:
-                track_artist.append(artist['name'])
+        # get top track from results
+        top_track = result['tracks']['items'][0]
+        track_artist = []
+        for artist in top_track['artists']:
+            track_artist.append(artist['name'])
 
-            track_title = top_track['name']
-            track_url = top_track['external_urls']['spotify']
-            return {'service': 'Spotify', 'title': track_title, 'artist': track_artist, 'url': track_url}
-        else:
-            return None
+        track_title = top_track['name']
+        track_url = top_track['external_urls']['spotify']
+        return {'service': 'Spotify', 'title': track_title, 'artist': track_artist, 'url': track_url}
