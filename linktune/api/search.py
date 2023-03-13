@@ -4,48 +4,57 @@ from linktune.api.deezer import Deezer
 from linktune.api.applemusic import AppleMusic
 from linktune.api.youtube import YouTube
 from linktune.config.config import SPOTIPY_CLIENT_ID, SPOTIPY_CLIENT_SECRET
+from linktune.utils.exceptions import *
 
 def search_track(artist, title, service='all', album=None):
+    service_map = {
+    'spotify': (Spotify, SPOTIPY_CLIENT_ID, SPOTIPY_CLIENT_SECRET),
+    'tidal': (Tidal,),
+    'deezer': (Deezer,),
+    'apple': (AppleMusic,),
+    'youtube': (YouTube,),
+}
+
     info = {'title': title, 'artist': artist}
     if album is not None:
         info['album'] = album
-        
-    # set query_type to 'search' before passing info to get_service_url
     info['query_type'] = 'search'
-    print(info)
-
-    service_map = {
-        'spotify': (Spotify, SPOTIPY_CLIENT_ID, SPOTIPY_CLIENT_SECRET),
-        'tidal': (Tidal,),
-        'deezer': (Deezer,),
-        'apple': (AppleMusic,),
-        'youtube': (YouTube,),
-    }
-
+    
     results = {}
     service_urls = []
     found_artist = found_title = False
 
-    search_service = service_map.keys() if service == 'all' else [service]
+    search_service = [s for s in service_map.keys() if service == 'all' or s == service]
+    if service != 'all' and service not in service_map:
+        raise ServiceNotFoundException(f"{service} is not a supported service.")
+    
     for service_name in search_service:
         service_class, *service_args = service_map.get(service_name, (None,))
         api = service_class(*service_args)
-        details = api.get_service_url(info)
-        if details:
-            if not found_artist:
-                track_artist = details.get('artist')
-                found_artist = True
-            if not found_title:
-                track_title = details.get('title')
-                found_title = True
-            service_urls.append({details['service']: details['url']})
+        
+        details = {}
+        try: 
+            details = api.get_service_url(info)
+        except TrackNotFoundOnAlbumException as e:
+            if service != 'all':
+                raise e
+            continue # TODO: fix this behaviour for when its only not found on ONE
+            
+        if not found_artist:
+            track_artist = details.get('artist')
+            found_artist = True
+        if not found_title:
+            track_title = details.get('title')
+            found_title = True
+        service_urls.append({details['service']: details['url']})
     results.update({'service_url': service_urls})
     if results:
-        results['artist'] = track_artist
-        results['title'] = track_title
-        return results
-    else:
-        return "Service not supported"
+        if track_artist:
+            results['artist'] = track_artist
+        if track_title:
+            results['title'] = track_title
+    return results
+
 
 def pretty_print(results):
     artists, title, service_urls = results['artist'], results['title'], results['service_url']
