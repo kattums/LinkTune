@@ -3,15 +3,40 @@ import re
 import requests
 from linktune.utils.exceptions import *
 
-# this can convert links to both YouTube Music and regular YouTube links
-# as long as the id and externalID are the same...
-
 class YouTube:
+    """Class to represent YouTube Music API service.
+    
+    Attributes:
+        service_name (str):
+            name of the service.
+
+    Methods:
+        get_track_info(track_url):
+            Returns info of provided YouTube Music track (artist, title, album).
+        _get_track_id(track_url):
+            Helper function for get_track_url. Returns track ID from track URL.
+        get_service_url(info):
+            Returns YouTube Music URL when provided with artist and track information to query.
+    """
     service_name = 'YouTube Music'
     def __init__(self):
         self.youtube = YTMusic()
 
     def get_track_info(self, track_url):
+        """Retrieves track information from a given YouTube Music url.
+
+        Args:
+            track_url (str): YouTube Music url provided by the user. 
+            example: "https://music.youtube.com/watch?v=SYto6vfUwXo"
+
+        Raises:
+            TrackIdNotFound: propagated from _get_track_id track ID cannot be identified.
+            ServiceTimeoutError: Raised when API response times out.
+            InvalidLinkException: Raised when user provides an invalid URL that contains 'youtube'
+
+        Returns:
+            dict: track info object containing artist, track title, and album information obtained from YouTube Music API.
+        """
         try:
             track_id = self._get_track_id(track_url)
         except TrackIdNotFoundException as e:
@@ -29,6 +54,18 @@ class YouTube:
         return {'artist': artist, 'title': title, 'album': album}
 
     def _get_track_id(self, track_url):
+        """Identifies track ID from a provided YouTube Music URL.
+
+        Args:
+            track_url (str): YouTube Music url provided by the user. 
+            example: "https://music.youtube.com/watch?v=SYto6vfUwXo" where "SYto6vfUwXo" is track ID.
+
+        Raises:
+            TrackIdNotFoundException: raised when track ID cannot be identified from provided URL.
+
+        Returns:
+            str: track ID, e.g. "SYto6vfUwXo".
+        """
         track_id = None
         try:
             track_id = re.search(r"v=([\w-]+)", track_url)
@@ -38,6 +75,24 @@ class YouTube:
         return track_id
     
     def get_service_url(self, info):
+        """Queries the YouTube Music API with provided track info in order to obtain the track
+        URL on the YouTube Music service.
+
+        Args:
+            info (dict): contains the following keys:
+                artist: artist name
+                title: track title
+                album: album title [OPTIONAL KEY]
+                query_type: type of calling function - opts 'convert' or 'search'.
+
+        Raises:
+            ServiceTimeoutError: Raised when API response times out.
+            TrackNotFoundOnAlbumException: Raised when track cannot be located on a specified album when query_type == 'search'.
+            TrackNotFoundException: Raised when the track cannot be found on the service.
+
+        Returns:
+            dict: returns a dictionary result containing service name, artist name, track title, and the URL for the track.
+        """
         query_type = info['query_type']
         title = re.sub("\(.*?\)|\[.*?\]","",info['title']).rstrip()
         if isinstance(info['artist'], list):
