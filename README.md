@@ -31,6 +31,17 @@ Will return:
     Diazepam by Ren
     Tidal: http://www.tidal.com/track/256813274
 
+When omitting the `<destination_service>`, LinkTune will convert the song to all other supported services:
+
+    linktune convert https://open.spotify.com/track/4s8uPDOuyjoO6Rmn7Armjc?si=1aea64a79baf406b
+
+    Searching for track...
+    Euphoria by Kai Straw
+    Tidal: http://www.tidal.com/track/255183733
+    Deezer: https://www.deezer.com/track/1973823837
+    Apple Music: https://music.apple.com/us/album/euphoria/1650552003?i=1650552010&uo=4
+    YouTube Music: https://music.youtube.com/watch?v=3JRqEYEKInw
+
 ### `search`
 The `search` command allows you to search for a track across multiple music services. Omitting `--service` will return the track on all services.
 
