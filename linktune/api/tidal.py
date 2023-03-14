@@ -9,10 +9,18 @@ class Tidal:
         self.tidal = TidalUnofficial({'user_agent': 'my_user_agent'})
 
     def get_track_info(self, track_url):
-        track_id = self._get_track_id(track_url)
-        if not track_id:
-            return None
-        track = self.tidal.get_track(track_id)
+        try:
+            track_id = self._get_track_id(track_url)
+        except TrackIdNotFoundException as e:
+            raise e
+        
+        try:
+            track = self.tidal.get_track(track_id)
+        except requests.Timeout:
+            raise ServiceTimeoutError("API request timed out.")
+        if not track:
+            raise InvalidLinkException("Provided link was not valid. Error returned by service.")
+            
         title = track['title']
         artist = track['artist']['name']
         album = track['album']['title']
@@ -21,8 +29,10 @@ class Tidal:
 
     def _get_track_id(self, track_url):
         track_id = None
-        if 'tidal' in track_url:
+        try:
             track_id = track_url.split('/')[-1]
+        except:
+            raise TrackIdNotFoundException
         return track_id
 
     def get_service_url(self, info):
@@ -38,7 +48,7 @@ class Tidal:
         try:
             results = self.tidal.search(query, search_type='tracks', limit=5)
         except requests.Timeout:
-            raise Exception(f"API request timed out.")
+            raise ServiceTimeoutError("API request timed out.")
         if len(results['items']) < 1:
             raise NoResultsReturnedException(f"No results found for {title} by {artist}.")
 
