@@ -23,7 +23,7 @@ class YouTube:
         self.youtube = YTMusic()
 
     def get_track_info(self, track_url):
-        """Retrieves track information from a given YouTube Music url.
+        """Retrieves track information from a given YouTube Music URL.
 
         Args:
             track_url (str): YouTube Music url provided by the user. 
@@ -45,7 +45,7 @@ class YouTube:
         try:
             track = self.youtube.search(track_id, filter='songs')[0]
         except requests.Timeout:
-            raise ServiceTimeoutError(f"API request timed out.")
+            raise ServiceTimeoutError("API request timed out.")
         except IndexError:
             raise InvalidLinkException('Could not identify track from provided link.')
 
