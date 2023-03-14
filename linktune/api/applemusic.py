@@ -20,11 +20,9 @@ class AppleMusic:
             raise ServiceResponseError("The service response produced an error.")
 
         # get results dict from the json response
-        data = res.json()['results'][0]
+        track = res.json()['results'][0]
 
-        title = data['trackName']
-        artist = data['artistName']
-        album = data['collectionName']
+        title, artist, album = track['trackName'], track['artistName'], track['collectionName']
         return {'artist': artist, 'title': title, 'album': album}
 
     def _get_track_id(self, track_url):
