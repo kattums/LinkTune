@@ -29,9 +29,11 @@ class Convert:
                 break
         if not source_service:
             raise ServiceNotFoundException(f"Could not identify service from provided link. Please make sure it is supported.")
+        try:
+            source_track_info = source_service.get_track_info(link)
+        except (TrackIdNotFoundException, InvalidLinkException, ServiceTimeoutError, ServiceResponseError) as e:
+            raise e
         
-        # TODO: error check for get_track_info
-        source_track_info = source_service.get_track_info(link)
         source_track_info['query_type'] = 'convert'
 
         # convert to all other services by looping through all services that are not source
@@ -48,11 +50,7 @@ class Convert:
                 try:
                     target_info = target_match.get_service_url(source_track_info)
                     service_urls.append({target_info['service']: target_info['url']})
-                except requests.Timeout as e:
-                    service_urls.append({f'{target_class.service_name}': str(e)})
-                except NoResultsReturnedException as e:
-                    service_urls.append({f'{target_class.service_name}': str(e)})
-                except TrackNotFoundException:
+                except (requests.Timeout, NoResultsReturnedException, TrackNotFoundException) as e:
                     service_urls.append({f'{target_class.service_name}': str(e)})
 
         return {'title': source_track_info['title'], 'artist': source_track_info.get('artist'), 'service_url': service_urls}
