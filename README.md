@@ -28,10 +28,11 @@ For example, to convert a Spotify link to a Tidal link:
 
 Will return: 
     
-    info: Diazepam by Ren, url: http://www.tidal.com/track/176483583
+    Diazepam by Ren
+    Tidal: http://www.tidal.com/track/256813274
 
 ### `search`
-The `search` command allows you to search for a track across multiple music services. 
+The `search` command allows you to search for a track across multiple music services. Omitting `--service` will return the track on all services.
 
 Syntax:
 
@@ -41,9 +42,20 @@ or use shorthand options, e.g.:
 
     linktune search -a ren -t diazepam -s apple
 
-    Diazepam by Ren: https://music.apple.com/us/album/diazepam/1652019136?i=1652019316&uo=4
+    Diazepam by Ren
+    Apple Music: https://music.apple.com/us/album/diazepam/1652019136?i=1652019316&uo=4
 
-Omitting `--service` will return the track on all services.
+
+You may optionally include an `--album` or `-al` flag, e.g.:
+
+    linktune search -a eminem -t mockingbird -al 'curtain call'
+
+    Mockingbird by Eminem
+    Spotify: https://open.spotify.com/track/0TGd9kXFDRQG9FF0netmah
+    Tidal: http://www.tidal.com/track/622475
+    Deezer: https://www.deezer.com/track/1109739
+    Apple Music: https://music.apple.com/us/album/mockingbird/1445726870?i=1445727499&uo=4
+    YouTube Music: https://music.youtube.com/watch?v=FjVjHkezTIM
 
 ## Installation
 
