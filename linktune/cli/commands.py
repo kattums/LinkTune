@@ -3,6 +3,7 @@ from linktune.api.search import search_track, pretty_print
 from linktune.utils.exceptions import *
 
 def convert(args):
+    print('Searching for track...')
     # get target service and song link from arguments
     service, link = args.target.lower(), args.link
     converted_result = {}
@@ -11,11 +12,11 @@ def convert(args):
     try:
         converted_result = Convert().convert_link(link, service)
         print(Convert().pretty_print(converted_result))
-    except ServiceNotFoundException as e:
+    except (ServiceNotFoundException, InvalidLinkException, TrackIdNotFoundException) as e:
         print(str(e))
         
-    if converted_result is None: # TODO: this needs some refactoring
-        print(f"Unable to find information for {link} on {service}")
+    if converted_result is None: 
+        raise ConvertLinkException('An unknown error occurred during conversion.')
 
 
 def search(args):
@@ -27,7 +28,8 @@ def search(args):
     try:
         result = search_track(artist, title, service, album)
         print(pretty_print(result))
-    except ServiceNotFoundException as e:
+    except (ServiceNotFoundException, TrackNotFoundOnAlbumException) as e:
         print(str(e))
-    except TrackNotFoundOnAlbumException as e:
-        print(str(e))
+        
+    if result is None:
+        raise SearchException('An unknown error occurred during search.')
