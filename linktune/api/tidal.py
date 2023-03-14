@@ -77,7 +77,6 @@ class Tidal:
                             break
                         else:
                             raise TrackNotFoundException(f'Could not find {title} by {artist}.')
-                    
         else:
             for item in results['items']:
                 if artist.lower() in item['artist']['name'].lower() and title.lower() in item['title'].lower():
