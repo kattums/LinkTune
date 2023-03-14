@@ -27,6 +27,9 @@ def search_track(artist, title, service='all', album=None):
     # search_service is either every service if service == 'all', or only the specified service.
     search_service = [s for s in service_map.keys() if service == 'all' or s == service]
 
+    # exception_counter keeps track of exceptions encountered during search. if it reaches len(service_map), raise exception.
+    exception_counter = 0
+
     for service_name in search_service:
         service_class, *service_args = service_map.get(service_name, (None,))
         api = service_class(*service_args)
@@ -39,6 +42,7 @@ def search_track(artist, title, service='all', album=None):
                 raise e
             else:
                 service_urls.append({f'{service_class.service_name}': str(e)})
+                exception_counter += 1
                 continue
             
         if not found_artist:
@@ -54,6 +58,10 @@ def search_track(artist, title, service='all', album=None):
             except:
                 pass
         service_urls.append({details['service']: details['url']})
+        
+    if exception_counter >= len(service_map):
+        raise TrackNotFoundException('Specified track returned no results on any service.')
+    
     results.update({'service_url': service_urls})
     if results:
         if track_artist:
