@@ -38,6 +38,7 @@ class YouTube:
         return track_id
     
     def get_service_url(self, info):
+        query_type = info['query_type']
         title = re.sub("\(.*?\)|\[.*?\]","",info['title']).rstrip()
         if isinstance(info['artist'], list):
             artist = info['artist'][0]
@@ -46,16 +47,40 @@ class YouTube:
 
         query = f"{artist} {title}"
         if 'album' in info:
-            query += f" {info['album']}"
+            album = info['album']
+            query += f" {album}"
             
         try:
-            top_track = self.youtube.search(f"{artist} {title}", filter = 'songs')[0]
-        except IndexError:
-            raise TrackNotFoundException(f'No results found for {title} by {artist}.')
+            top_tracks = self.youtube.search(f"{artist} {title}", filter = 'songs', limit = 5)
         except requests.Timeout:
-            raise ServiceTimeoutError(f"API request timed out.")
+            raise ServiceTimeoutError("API request timed out.")
+        
+        top_track = None
+        
+        if 'album' in info:
+            for track in top_tracks:
+                if artist.lower() in track['artists'][0]['name'].lower() and title.lower() in track['title'].lower() and album.lower() in track['album']['name'].lower():
+                    top_track = track
+                    break
+            # check if top_track is empty after conclusion of the loop, then return according to query_type.
+            if top_track == None:
+                if query_type == 'search':
+                    raise TrackNotFoundOnAlbumException(f"Could not find track on the album '{album}'. To search across all albums, omit the album argument.") 
+                else: # if query_type != search, return the top track that matches artist and title.
+                    for track in top_tracks:
+                        if artist.lower() in track['artists'][0]['name'].lower() and title.lower() in track['title'].lower():
+                            top_track = track
+                            break
+                        else:
+                            raise TrackNotFoundException(f'Could not find {title} by {artist}.')       
+        else:
+            for track in top_tracks:
+                if artist.lower() in track['artists'][0]['name'].lower() and title.lower() in track['title'].lower():
+                    top_track = track
+                    break
+                else:
+                    raise TrackNotFoundException(f'Could not find {title} by {artist}.')
         
         track_id, track_title, track_artist = top_track['videoId'], top_track['title'], [artist['name'] for artist in top_track['artists']]
 
         return {'service': 'YouTube Music', 'title': track_title, 'artist': track_artist, 'url': f"https://music.youtube.com/watch?v={track_id}"}
-
