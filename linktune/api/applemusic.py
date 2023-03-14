@@ -1,4 +1,5 @@
 import requests
+from linktune.utils.exceptions import *
 
 class AppleMusic:
 
@@ -14,7 +15,9 @@ class AppleMusic:
             res = requests.get(query, timeout=2)
             res.raise_for_status()
         except requests.Timeout:
-            raise Exception(f"API request timed out.")
+            raise ServiceTimeoutError(f"API request timed out.")
+        except res.status_code != 200:
+            raise ServiceResponseError("The service response produced an error.")
 
         # get results dict from the json response
         data = res.json()['results'][0]
@@ -47,14 +50,16 @@ class AppleMusic:
             res = requests.get(query, timeout=2)
             res.raise_for_status()
         except requests.Timeout:
-            raise Exception(f"API request timed out.")
+            raise ServiceTimeoutError("API request timed out.")
+        except res.status_code != 200:
+            raise ServiceResponseError("The service response produced an error.")
 
-        data = res.json()
         # get json response of matching tracks
-        if data['results']: 
-            top_track = data['results'][0]
+        data = res.json() 
+        if data['resultCount'] < 1:
+            raise TrackNotFoundException(f'No results found for {title} by {artist}.')
+        
+        top_track = data['results'][0]
+        link, artist, title = top_track['trackViewUrl'], [top_track['artistName']], top_track['trackName']
 
-            link, artist, title = top_track['trackViewUrl'], [top_track['artistName']], top_track['trackName']
-
-            return {'service': 'Apple Music', 'title': title, 'artist': artist, 'url': link}
-        return None
+        return {'service': 'Apple Music', 'title': title, 'artist': artist, 'url': link}
