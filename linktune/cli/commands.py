@@ -28,7 +28,7 @@ def search(args):
     try:
         result = search_track(artist, title, service, album)
         print(pretty_print(result))
-    except (ServiceNotFoundException, TrackNotFoundOnAlbumException) as e:
+    except (ServiceTimeoutError, NoResultsReturnedException, TrackNotFoundException, TrackNotFoundOnAlbumException) as e:
         print(str(e))
         
     if result is None:
