@@ -1,36 +1,41 @@
 import requests
 import re
+from linktune.utils.exceptions import *
 
 class Deezer:
     service_name = 'Deezer'
     base_url = 'https://api.deezer.com/'
 
     def get_track_info(self, track_url):
-        print('Searching for track...')
-        track_id = self._get_track_id(track_url)
+        try:
+            track_id = self._get_track_id(track_url)
+        except TrackIdNotFoundException as e:
+            raise e
 
         query = f'{self.base_url}/track/{track_id}'
 
         try:
             response = requests.get(query)
             response.raise_for_status()
-        except requests.exceptions.RequestException as e:
-            return f"Could not retrieve track information from Deezer: {str(e)}"
+        except requests.Timeout:
+            raise ServiceTimeoutError("API request timed out.")
+        except response.status_code != 200:
+            raise ServiceResponseError("The service response produced an error.")
 
         data = response.json()
-        # print(data)
-        # if 'error' in data:
-        #     raise SystemExit(f"No results returned for the Deezer url: {track_url}. Please ensure the link is valid.")
-        title = data['title']
-        artist = data['artist']['name']
-        album = data['album']['title']
+        
+        if 'error' in data:
+            raise InvalidLinkException("Provided link was not valid. Error returned by service.")
+        
+        title, artist, album = data['title'], data['artist']['name'], data['album']['title']
 
         return {'artist': artist, 'title': title, 'album': album}
 
     def _get_track_id(self, track_url):
-        _, _, track_id = track_url.rpartition('/')
-        if not track_id:
-            return "Could not locate track id"
+        try:
+            _, _, track_id = track_url.rpartition('/')
+        except:
+            raise TrackIdNotFoundException('Could not identify track ID from provided link.')
         return track_id
     
     def get_service_url(self, info):
@@ -42,18 +47,20 @@ class Deezer:
             album = info['album']
             query += f'album:"{album}"'
             
-        response = requests.get(query)
-        response.raise_for_status()
-
-        # I think perhaps the better way to handle this is to still return the object but instead of
-        # "url: url" I can put "url: could not find track" into the dict.
+        try:
+            response = requests.get(query)
+            response.raise_for_status()
+        except requests.Timeout:
+            raise ServiceTimeoutError("API request timed out.")
+        except response.status_code != 200:
+            raise ServiceResponseError("The service response produced an error.")
+        
+        if response.json()['total'] < 1:
+            raise TrackNotFoundException(f'No results found for {title} by {artist}.')
         data = response.json()['data']
-        if not data:
-            return None
-
         top_track = data[0]
-        track_title = top_track['title']
-        track_link = top_track['link']
+        
+        track_title, track_link = top_track['title'], top_track['link']
         track_artists = [top_track['artist']]
         track_artist = [artist['name'] for artist in track_artists]
         
