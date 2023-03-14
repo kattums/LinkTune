@@ -11,12 +11,18 @@ class Spotify:
         self.sp = spotipy.Spotify(auth_manager=SpotifyClientCredentials(client_id=client_id, client_secret=client_secret, cache_handler=MemoryCacheHandler()))
 
     def get_track_info(self, track_url):
-        print('Searching for track...')
-        track_id = self._get_track_id(track_url)
-        if not track_id:
-            return 'Could not identify Spotify track ID'
+        try:
+            track_id = self._get_track_id(track_url)
+        except TrackIdNotFoundException as e:
+            raise e
 
-        track = self.sp.track(track_id)
+        try:
+            track = self.sp.track(track_id)
+        except requests.Timeout:
+            raise ServiceTimeoutError("API request timed out.")
+        if not track: # reconsider this implementation... its not strictly true.
+            raise InvalidLinkException("Provided link was not valid. Error returned by service.")
+        
         artists = [artist['name'] for artist in track['artists']]
         title = track['name']
         album = track['album']['name']
@@ -25,44 +31,39 @@ class Spotify:
 
     def _get_track_id(self, track_url):
         track_id = None
-        # check if Spotify internal id is appended to the link and remove if so
-        if '?si=' in track_url:
-            track_url = track_url.split('?si=')[0]
-        if 'open.spotify.com/track/' in track_url:
-            _, _, track_id = track_url.rpartition('/')
-        elif 'spotify:track:' in track_url:
-            _, _, track_id = track_url.rpartition(':')
-
+        try:
+            # check if Spotify internal id is appended to the link and remove if so
+            if '?si=' in track_url:
+                track_url = track_url.split('?si=')[0]
+            if 'open.spotify.com/track/' in track_url:
+                _, _, track_id = track_url.rpartition('/')
+            elif 'spotify:track:' in track_url:
+                _, _, track_id = track_url.rpartition(':')
+        except:
+            raise TrackIdNotFoundException("Could not identify track ID from provided link.")
         return track_id
 
     def get_service_url(self, info):
-        # remove extra characters present in track title
+        # remove extra and paranthesied characters present in track title
         title = re.sub("\(.*?\)|\[.*?\]","",info['title']).rstrip()
 
-        # TODO: find less hacky way of solving artists being returned as a list by some platforms and include extra artists in query
         if isinstance(info['artist'], list):
             artist = info['artist'][0]
         else:
             artist = info['artist']
 
         query = f"{info['title']} artist:{artist}"
-
         if 'album' in info:
             query += f" album:{info['album']}"
         
         try: 
             result = self.sp.search(query, limit=1, type='track')
         except requests.Timeout:
-            raise Exception(f"API request timed out.")
+            raise ServiceTimeoutError("API request timed out.")
         if len(result['tracks']['items']) < 1:
             raise NoResultsReturnedException(f"No results found for {title} by {artist}.")
 
-        # get top track from results
+        # Get top track from results and extract track details from top track
         top_track = result['tracks']['items'][0]
-        track_artist = []
-        for artist in top_track['artists']:
-            track_artist.append(artist['name'])
-
-        track_title = top_track['name']
-        track_url = top_track['external_urls']['spotify']
+        track_artist, track_title, track_url = [artist['name'] for artist in top_track['artists']], top_track['name'], top_track['external_urls']['spotify']
         return {'service': 'Spotify', 'title': track_title, 'artist': track_artist, 'url': track_url}
