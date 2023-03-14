@@ -1,4 +1,4 @@
-from flask import Flask, request, render_template
+from flask import Flask, request
 from linktune.api.convert import Convert
 
 app = Flask(__name__, static_folder='static')
@@ -11,8 +11,7 @@ def index():
 @app.route('/convert')
 def convert():
     print('convert request received')
-    url = request.args.get('url')
-    target_service = request.args.get('target_service')
+    url, target_service = request.args.get('url'), request.args.get('target_service')
     return Convert().convert_link(url, target_service)
 
 if __name__ == '__main__':
