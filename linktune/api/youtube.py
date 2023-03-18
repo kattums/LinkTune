@@ -1,6 +1,6 @@
-from ytmusicapi import YTMusic
 import re
 import requests
+from ytmusicapi import YTMusic
 from linktune.utils.exceptions import *
 
 class YouTube:
@@ -35,7 +35,8 @@ class YouTube:
             InvalidLinkException: Raised when user provides an invalid URL that contains 'youtube'
 
         Returns:
-            dict: track info object containing artist, track title, and album information obtained from YouTube Music API.
+            dict: track info object containing artist, track title, 
+            and album information obtained from YouTube Music API.
         """
         try:
             track_id = self._get_track_id(track_url)
@@ -73,7 +74,7 @@ class YouTube:
         except track_id is None:
             raise TrackIdNotFoundException('Could not identify track ID from provided link.')
         return track_id
-    
+
     def get_service_url(self, info):
         """Queries the YouTube Music API with provided track info in order to obtain the track
         URL on the YouTube Music service.
@@ -86,12 +87,14 @@ class YouTube:
                 query_type: type of calling function - opts 'convert' or 'search'.
 
         Raises:
-            ServiceTimeoutError: Raised when API response times out.
-            TrackNotFoundOnAlbumException: Raised when track cannot be located on a specified album when query_type == 'search'.
-            TrackNotFoundException: Raised when the track cannot be found on the service.
+            ServiceTimeoutError: when API response times out.
+            TrackNotFoundOnAlbumException: track cannot be located on specified album 
+            with query_type == 'search'.
+            TrackNotFoundException: when the track cannot be found on the service.
 
         Returns:
-            dict: returns a dictionary result containing service name, artist name, track title, and the URL for the track.
+            dict: returns a dictionary result containing service name, artist name, track title, 
+            and the URL for the track.
         """
         query_type = info['query_type']
         title = re.sub("\(.*?\)|\[.*?\]","",info['title']).rstrip()
@@ -104,14 +107,14 @@ class YouTube:
         if 'album' in info:
             album = info['album']
             query += f" {album}"
-            
+
         try:
             top_tracks = self.youtube.search(f"{artist} {title}", filter = 'songs', limit = 5)
         except requests.Timeout:
             raise ServiceTimeoutError("API request timed out.")
-        
+
         top_track = None
-        
+
         if 'album' in info:
             for track in top_tracks:
                 if artist.lower() in track['artists'][0]['name'].lower() and title.lower() in track['title'].lower() and album.lower() in track['album']['name'].lower():
@@ -133,9 +136,9 @@ class YouTube:
                 if artist.lower() in track['artists'][0]['name'].lower() and title.lower() in track['title'].lower():
                     top_track = track
                     break
-                else:
-                    raise TrackNotFoundException(f'Could not find {title} by {artist}.')
-        
+            else:
+                raise TrackNotFoundException(f'Could not find {title} by {artist}.')
+
         track_id, track_title, track_artist = top_track['videoId'], top_track['title'], [artist['name'] for artist in top_track['artists']]
 
         return {'service': 'YouTube Music', 'title': track_title, 'artist': track_artist, 'url': f"https://music.youtube.com/watch?v={track_id}"}

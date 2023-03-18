@@ -1,7 +1,8 @@
 import re
 import requests
-from linktune.utils.exceptions import *
 from tidal_unofficial import TidalUnofficial
+from linktune.utils.exceptions import *
+
 
 class Tidal:
     service_name = 'Tidal'
@@ -16,8 +17,8 @@ class Tidal:
         
         try:
             track = self.tidal.get_track(track_id)
-        except requests.Timeout:
-            raise ServiceTimeoutError("API request timed out.")
+        except requests.Timeout as e:
+            raise ServiceTimeoutError("API request timed out.") from e
         if not track:
             raise InvalidLinkException("Provided link was not valid. Error returned by service.")
             
@@ -37,13 +38,12 @@ class Tidal:
 
     def get_service_url(self, info):
         query_type = info['query_type']
-        
         title = re.sub("\(.*?\)|\[.*?\]","",info['title']).rstrip()
         if isinstance(info['artist'], list):
             artist = info['artist'][0]
         else:
             artist = info['artist']
-        query = f"{title}+{artist}"        
+        query = f"{title}+{artist}"     
 
         try:
             results = self.tidal.search(query, search_type='tracks', limit=5)
@@ -67,7 +67,7 @@ class Tidal:
                     top_track = item
                     break
             # check if top_track is empty after conclusion of the loop, then return according to query_type.
-            if top_track == None:
+            if top_track is None:
                 if query_type == 'search':
                     raise TrackNotFoundOnAlbumException(f"Could not find track on the album '{album}'. To search across all albums, omit the album argument.") 
                 else: # if query_type != search, return the top track that matches artist and title.
@@ -82,8 +82,8 @@ class Tidal:
                 if artist.lower() in item['artist']['name'].lower() and title.lower() in item['title'].lower():
                     top_track = item
                     break
-                else:
-                    raise TrackNotFoundException(f'Could not find {title} by {artist}.')
+            else:
+                raise TrackNotFoundException(f'Could not find {title} by {artist}.')
             
         # we loop through artists to handle the case where there are multiple artists for one song
         for artist in top_track['artists']:
