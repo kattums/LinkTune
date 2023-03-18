@@ -1,9 +1,10 @@
 import spotipy
 import re
 import requests
-from linktune.utils.exceptions import *
 from spotipy.oauth2 import SpotifyClientCredentials
 from spotipy.cache_handler import MemoryCacheHandler
+from linktune.utils.exceptions import *
+
 
 class Spotify:
     service_name = 'Spotify'
@@ -51,19 +52,48 @@ class Spotify:
             artist = info['artist'][0]
         else:
             artist = info['artist']
-
-        query = f"{info['title']} artist:{artist}"
-        if 'album' in info:
-            query += f" album:{info['album']}"
         
-        try: 
-            result = self.sp.search(query, limit=1, type='track')
+        query_type = info['query_type']
+
+        query = f"track:{info['title']} artist:{artist}"
+                
+        if 'album' in info:
+            album = info['album']
+            query += f" album:{info['album']}"
+
+        try:
+            results = self.sp.search(query, limit=10, type='track')
         except requests.Timeout:
             raise ServiceTimeoutError("API request timed out.")
-        if len(result['tracks']['items']) < 1:
+        if len(results['tracks']['items']) < 1:
             raise NoResultsReturnedException(f"No results found for {title} by {artist}.")
+        
+        # print(results['tracks']['items'])
+        
+        top_track = None
+        
+        if 'album' in info:
+            for item in results['tracks']['items']:
+                if artist.lower() in item['artists'][0]['name'].lower() and title.lower() in item['name'].lower() and album.lower() in item['album']['name'].lower():
+                    top_track = item
+                    break
+                if top_track is None:
+                    if query_type == 'search':
+                        raise TrackNotFoundOnAlbumException(f"Could not find track on the album '{album}'. To search across albums, omit the album argument.")
+                    else:
+                        for item in results['items']:
+                            print(item)
+                            if artist.lower() in item['artists'][0]['name'].lower() and title.lower() in item['name'].lower():
+                                top_track = item
+                                break
+        else:
+            for item in results['tracks']['items']:
+                if artist.lower() in item['artists'][0]['name'].lower() and title.lower() in item['name'].lower():
+                    top_track = item
+                    break
+            else:
+                raise TrackNotFoundException(f"Could not find {title} by {artist}.")
 
-        # Get top track from results and extract track details from top track
-        top_track = result['tracks']['items'][0]
         track_artist, track_title, track_url = [artist['name'] for artist in top_track['artists']], top_track['name'], top_track['external_urls']['spotify']
         return {'service': 'Spotify', 'title': track_title, 'artist': track_artist, 'url': track_url}
+
