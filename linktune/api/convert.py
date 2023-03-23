@@ -18,7 +18,7 @@ class Convert:
             'youtube': (YouTube,),
         }
 
-    def convert_link(self, link, target_service):
+    def convert_link(self, link, target_service='all'):
         source_service = None
 
         # find service name in services map. initialise service with args if necessary
