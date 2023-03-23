@@ -121,16 +121,14 @@ class YouTube:
                     top_track = track
                     break
             # check if top_track is empty after conclusion of the loop, then return according to query_type.
-            if top_track == None:
+            if top_track is None:
                 if query_type == 'search':
                     raise TrackNotFoundOnAlbumException(f"Could not find track on the album '{album}'. To search across all albums, omit the album argument.") 
-                else: # if query_type != search, return the top track that matches artist and title.
-                    for track in top_tracks:
-                        if artist.lower() in track['artists'][0]['name'].lower() and title.lower() in track['title'].lower():
-                            top_track = track
-                            break
-                        else:
-                            raise TrackNotFoundException(f'Could not find {title} by {artist}.')       
+                for track in top_tracks:
+                    if artist.lower() in track['artists'][0]['name'].lower() and title.lower() in track['title'].lower():
+                        top_track = track
+                        break
+                    raise TrackNotFoundException(f'Could not find {title} by {artist}.')       
         else:
             for track in top_tracks:
                 if artist.lower() in track['artists'][0]['name'].lower() and title.lower() in track['title'].lower():
