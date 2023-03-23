@@ -25,6 +25,18 @@ inputUrl.addEventListener('keydown', (event) => {
   }
 });
 
+// add event listener to results for clicking copy button
+results.addEventListener('click', event => {
+  if(event.target.classList.contains('copy-button')) {
+    if(navigator.clipboard) {
+      navigator.clipboard.writeText(event.target.id)
+    } else {
+    console.log(event.target.id);
+    };
+  }
+})
+
+
 const convertUrl = function() {
     // clear previous search results
     results.innerHTML = "";
@@ -89,9 +101,10 @@ const convertUrl = function() {
           goLink.target = "_blank";
           goButton.appendChild(goLink);
 
-          let copyButton = document.createElement('div');
-          copyButton.classList.add('inline-flex', 'items-center', 'text-base', 'font-semibold', 'text-sky-100', 'pr-8');
+          let copyButton = document.createElement('button');
+          copyButton.classList.add('copy-button', 'inline-flex', 'items-center', 'text-base', 'font-semibold', 'text-sky-100', 'pr-8');
           copyButton.innerText = "COPY";
+          copyButton.id = resultUrl;
 
           resultDiv.appendChild(logoWrapper);
           resultDiv.appendChild(serviceNameWrapper);
