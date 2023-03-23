@@ -49,8 +49,6 @@ const convertUrl = function() {
       .then(response => response.json())
       .then(data => {
         // update output with converted link or error message
-        console.log(data);
-        console.log(data.service_url);
         const infoText = `${data.title} by ${data.artist}`
         info.innerText = infoText || "";
         const service_urls = data.service_url;
@@ -67,7 +65,7 @@ const convertUrl = function() {
   
           // The list item that must be appended to the ul
           let resultElem = document.createElement('li');
-          resultElem.classList.add('p-3', 'pb-6', 'sm:pb-4', 'hover:bg-sky-700');
+          resultElem.classList.add('p-5', 'pb-10', 'sm:pb-4', 'hover:bg-sky-700');
   
           // Create a new element to contain logo and service name
           // and elements for logo and service name
@@ -77,7 +75,7 @@ const convertUrl = function() {
           let logoImg = document.createElement('img');
           logoImg.src = logos[serviceName];
           logoImg.alt = serviceName;
-          logoImg.classList.add('h-8', 'w-8');
+          logoImg.classList.add('h-14', 'w-14');
           // append logo img to the logo wrapper div
           logoWrapper.appendChild(logoImg);
 
@@ -87,13 +85,13 @@ const convertUrl = function() {
 
           let serviceNameElem = document.createElement('p');
           serviceNameElem.innerText = serviceName;
-          serviceNameElem.classList.add('text-xl', 'font-medium', 'text-sky-100');
+          serviceNameElem.classList.add('text-2xl', 'font-medium', 'text-sky-100');
           // append service name element to wrapper element
           serviceNameWrapper.appendChild(serviceNameElem);
 
           // create elements for GO and COPY buttons
           let goButton = document.createElement('div');
-          goButton.classList.add('inline-flex', 'items-center', 'text-base', 'font-semibold', 'text-sky-100', 'hover:text-fuchsia-400');
+          goButton.classList.add('inline-flex', 'text-2xl', 'items-center', 'text-base', 'font-semibold', 'text-sky-100', 'hover:text-fuchsia-400');
           // create anchor element and append
           let goLink = document.createElement('a');
           goLink.innerText = "GO";
@@ -102,7 +100,7 @@ const convertUrl = function() {
           goButton.appendChild(goLink);
 
           let copyButton = document.createElement('button');
-          copyButton.classList.add('copy-button', 'inline-flex', 'items-center', 'text-base', 'font-semibold', 'text-sky-100', 'pr-8');
+          copyButton.classList.add('copy-button', 'text-2xl', 'inline-flex', 'items-center', 'text-base', 'font-semibold', 'text-sky-100', 'hover:text-fuchsia-400', 'pr-8');
           copyButton.innerText = "COPY";
           copyButton.id = resultUrl;
 
