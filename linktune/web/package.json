@@ -1,0 +1,15 @@
+{
+  "name": "linktune-web",
+  "version": "1.0.0",
+  "description": "Web interface for LinkTune!",
+  "main": "./static/js/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "npx tailwindcss -i ./static/styles.css -o ./static/dist/css/output.css --watch"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "tailwindcss": "^3.2.7"
+  }
+}

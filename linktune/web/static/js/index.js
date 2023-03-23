@@ -2,7 +2,7 @@
 const inputUrl = document.getElementById('url');
 const convertButton = document.getElementById('convert');
 const info = document.getElementById('info');
-const result = document.getElementById('result');
+const results = document.getElementById('results');
 
 const logos = {
   'Spotify': '../static/img/icons/Spotify_icon.svg',
@@ -27,7 +27,7 @@ inputUrl.addEventListener('keydown', (event) => {
 
 const convertUrl = function() {
     // clear previous search results
-    result.innerHTML = "";
+    results.innerHTML = "";
 
     // get input value
     const source_url = inputUrl.value;
@@ -43,43 +43,62 @@ const convertUrl = function() {
         info.innerText = infoText || "";
         const service_urls = data.service_url;
   
-  
         // Map results data to result elements
-        service_urls.map(service_url => {
-          let result_section = document.createElement('section');
-          result_section.classList.add('h-10', 'bg-blue-300', 'my-2', 'rounded-lg', 'text-slate-700', 'flex', 'flex-row');
-  
+        service_urls.map(service_url => {  
           // Get the service name and result from the service_url object
           const serviceName = Object.keys(service_url)[0];
           const resultUrl = Object.values(service_url)[0];
+
+          // the result div nested in the li
+          let resultDiv = document.createElement('div');
+          resultDiv.classList.add('flex', 'items-center', 'space-x-3');
+  
+          // The list item that must be appended to the ul
+          let resultElem = document.createElement('li');
+          resultElem.classList.add('p-3', 'pb-6', 'sm:pb-4', 'hover:bg-sky-700');
   
           // Create a new element to contain logo and service name
           // and elements for logo and service name
           let logoWrapper = document.createElement('div');
-          logoWrapper.classList.add('h-10', 'bg-gray-300', 'rounded', 'p-2', 'flex', 'items-center');
-          
+          logoWrapper.classList.add('flex-shrink-0', 'pl-6');
+          // get logo img from the service : logos map
           let logoImg = document.createElement('img');
           logoImg.src = logos[serviceName];
           logoImg.alt = serviceName;
-          logoImg.classList.add('py-0.5', 'h-10');
-  
-          let serviceNameElem = document.createElement('span');
-          serviceNameElem.innerText = serviceName;
-          serviceNameElem.classList.add('pl-px', 'text-gray-700');
-  
+          logoImg.classList.add('h-8', 'w-8');
+          // append logo img to the logo wrapper div
           logoWrapper.appendChild(logoImg);
-          logoWrapper.appendChild(serviceNameElem);
-  
-          // Create a new element for the track result
-          let resultElem = document.createElement('span');
-          resultElem.classList.add('pl-2')
-          resultElem.innerText = resultUrl;
-  
-          // Append logo, service name, track result elements to the result_section
-          result_section.appendChild(logoWrapper);
-          result_section.appendChild(resultElem);
-  
-          result.appendChild(result_section);
+
+          // create div wrapper for service name
+          let serviceNameWrapper = document.createElement('div');
+          serviceNameWrapper.classList.add('min-w-0', 'flex-1');
+
+          let serviceNameElem = document.createElement('p');
+          serviceNameElem.innerText = serviceName;
+          serviceNameElem.classList.add('text-xl', 'font-medium', 'text-sky-100');
+          // append service name element to wrapper element
+          serviceNameWrapper.appendChild(serviceNameElem);
+
+          // create elements for GO and COPY buttons
+          let goButton = document.createElement('div');
+          goButton.classList.add('inline-flex', 'items-center', 'text-base', 'font-semibold', 'text-sky-100', 'hover:text-fuchsia-400');
+          // create anchor element and append
+          let goLink = document.createElement('a');
+          goLink.innerText = "GO";
+          goLink.href = resultUrl;
+          goLink.target = "_blank";
+          goButton.appendChild(goLink);
+
+          let copyButton = document.createElement('div');
+          copyButton.classList.add('inline-flex', 'items-center', 'text-base', 'font-semibold', 'text-sky-100', 'pr-8');
+          copyButton.innerText = "COPY";
+
+          resultDiv.appendChild(logoWrapper);
+          resultDiv.appendChild(serviceNameWrapper);
+          resultDiv.appendChild(goButton);
+          resultDiv.appendChild(copyButton);
+          resultElem.appendChild(resultDiv);
+          results.appendChild(resultElem);
         });
       })
       .catch(error => console.error(error));
