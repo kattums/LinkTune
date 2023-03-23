@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "linktune"
-version = "0.1.3"
+version = "1.0.1"
 authors = [{name = "fi", email = "fiona.nugent7@gmail.com"}]
 description = "A package for searching and converting music links across different music streaming services."
 readme = "README.md"
@@ -22,3 +22,8 @@ dependencies = [
 
 [project.scripts]
 linktune = "linktune.cli.main:main"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["linktune*"]
+exclude = ["linktune.web*"]
