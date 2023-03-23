@@ -47,8 +47,8 @@ class Tidal:
 
         try:
             results = self.tidal.search(query, search_type='tracks', limit=5)
-        except requests.Timeout:
-            raise ServiceTimeoutError("API request timed out.")
+        except requests.Timeout as e:
+            raise ServiceTimeoutError("API request timed out.") from e
         if len(results['items']) < 1:
             raise NoResultsReturnedException(f"No results found for {title} by {artist}.")
 
@@ -70,13 +70,12 @@ class Tidal:
             if top_track is None:
                 if query_type == 'search':
                     raise TrackNotFoundOnAlbumException(f"Could not find track on the album '{album}'. To search across all albums, omit the album argument.") 
-                else: # if query_type != search, return the top track that matches artist and title.
-                    for item in results['items']:
-                        if artist.lower() in item['artist']['name'].lower() and title.lower() in item['title'].lower():
-                            top_track = item
-                            break
-                        else:
-                            raise TrackNotFoundException(f'Could not find {title} by {artist}.')
+                # if query_type != search, return the top track that matches artist and title.
+                for item in results['items']:
+                    if artist.lower() in item['artist']['name'].lower() and title.lower() in item['title'].lower():
+                        top_track = item
+                        break
+                    raise TrackNotFoundException(f'Could not find {title} by {artist}.')
         else:
             for item in results['items']:
                 if artist.lower() in item['artist']['name'].lower() and title.lower() in item['title'].lower():
