@@ -63,13 +63,11 @@ class Spotify:
 
         try:
             results = self.sp.search(query, limit=10, type='track')
-        except requests.Timeout:
-            raise ServiceTimeoutError("API request timed out.")
+        except requests.Timeout as e:
+            raise ServiceTimeoutError("API request timed out.") from e
         if len(results['tracks']['items']) < 1:
             raise NoResultsReturnedException(f"No results found for {title} by {artist}.")
-        
-        # print(results['tracks']['items'])
-        
+           
         top_track = None
         
         if 'album' in info:
@@ -80,12 +78,12 @@ class Spotify:
                 if top_track is None:
                     if query_type == 'search':
                         raise TrackNotFoundOnAlbumException(f"Could not find track on the album '{album}'. To search across albums, omit the album argument.")
-                    else:
-                        for item in results['items']:
-                            print(item)
-                            if artist.lower() in item['artists'][0]['name'].lower() and title.lower() in item['name'].lower():
-                                top_track = item
-                                break
+                    for item in results['items']:
+                        print(item)
+                        if artist.lower() in item['artists'][0]['name'].lower() and title.lower() in item['name'].lower():
+                            top_track = item
+                            break
+                        raise TrackNotFoundException(f"Could not find {title} by {artist}.")
         else:
             for item in results['tracks']['items']:
                 if artist.lower() in item['artists'][0]['name'].lower() and title.lower() in item['name'].lower():
