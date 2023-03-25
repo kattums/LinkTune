@@ -13,6 +13,11 @@ const logos = {
   'Apple Music': '../static/img/icons/Apple_Music_icon.svg'
 };
 
+const icons = {
+  'copy': '../static/img/icons/copy.svg',
+  'go': '../static/img/icons/go.svg'
+};
+
 // event listeners for button click and pressing enter in input
 convertButton.addEventListener('click', (event) => {
   event.preventDefault(); 
@@ -108,19 +113,25 @@ const convertUrl = function() {
           serviceNameWrapper.appendChild(serviceNameElem);
 
           // create elements for GO and COPY buttons
-          let goButton = document.createElement('div');
+          let goButton = document.createElement('button');
           goButton.classList.add('inline-flex', 'text-4xl', 'items-center', 'text-base', 'font-semibold', 'text-sky-100', 'hover:text-fuchsia-400');
           // create anchor element and append
           let goLink = document.createElement('a');
-          goLink.innerText = "GO";
           goLink.href = resultUrl;
           goLink.target = "_blank";
           goButton.appendChild(goLink);
+          let goIcon = document.createElement('img');
+          goIcon.src = icons.go;
+          goIcon.classList.add('h-12', 'w-12', 'go-button');
+          goLink.appendChild(goIcon);
 
           let copyButton = document.createElement('button');
-          copyButton.classList.add('copy-button', 'text-4xl', 'inline-flex', 'items-center', 'text-base', 'font-semibold', 'text-sky-100', 'hover:text-fuchsia-400', 'pr-8');
-          copyButton.innerText = "COPY";
-          copyButton.id = resultUrl;
+          copyButton.classList.add('inline-flex', 'items-center', 'pr-2', 'pl-2');
+          let copyIcon = document.createElement('img');
+          copyIcon.src = icons.copy;
+          copyIcon.classList.add('h-8', 'w-8', 'copy-button');
+          copyButton.appendChild(copyIcon);
+          copyIcon.id = resultUrl;
 
           resultDiv.appendChild(logoWrapper);
           resultDiv.appendChild(serviceNameWrapper);

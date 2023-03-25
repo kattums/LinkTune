@@ -19,3 +19,8 @@
     background-size: 200% 200%;
     animation: gradient-pulse 3s ease-in-out infinite;
   }
+
+.copy-button:hover, .go-button:hover {
+    filter: invert(52%) sepia(35%) saturate(1277%) hue-rotate(297deg) brightness(99%) contrast(90%);
+  }
+  
