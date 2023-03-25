@@ -3,6 +3,7 @@ const inputUrl = document.getElementById('url');
 const convertButton = document.getElementById('convert');
 const info = document.getElementById('info');
 const results = document.getElementById('results');
+const gradientDiv = document.getElementById('gradient-bar');
 
 const logos = {
   'Spotify': '../static/img/icons/Spotify_icon.svg',
@@ -36,11 +37,23 @@ results.addEventListener('click', event => {
   }
 })
 
+// wrapper function for text type writing animation
+const textTypewrite = function(element, text) {
+  var typewriter = new Typewriter(element, {
+    loop: false
+  });
+
+  typewriter.typeString(text)
+  .callFunction(state => state.elements.cursor.style.display = 'none')
+  .start();
+}
 
 const convertUrl = function() {
     // clear previous search results
     results.innerHTML = "";
 
+
+    gradientDiv.classList.add('gradient-pulse');
     // get input value
     const source_url = inputUrl.value;
   
@@ -48,9 +61,14 @@ const convertUrl = function() {
     fetch(`/convert?url=${source_url}`)
       .then(response => response.json())
       .then(data => {
+        //remove loading gradient pulse
+        gradientDiv.classList.remove('gradient-pulse')
+
         // update output with converted link or error message
         const infoText = `${data.title} by ${data.artist}`
-        info.innerText = infoText || "";
+        textTypewrite(info, infoText);
+
+        // info.innerText = infoText || "";
         const service_urls = data.service_url;
   
         // Map results data to result elements
@@ -85,13 +103,13 @@ const convertUrl = function() {
 
           let serviceNameElem = document.createElement('p');
           serviceNameElem.innerText = serviceName;
-          serviceNameElem.classList.add('text-2xl', 'font-medium', 'text-sky-100');
+          serviceNameElem.classList.add('text-4xl', 'font-medium', 'text-sky-100');
           // append service name element to wrapper element
           serviceNameWrapper.appendChild(serviceNameElem);
 
           // create elements for GO and COPY buttons
           let goButton = document.createElement('div');
-          goButton.classList.add('inline-flex', 'text-2xl', 'items-center', 'text-base', 'font-semibold', 'text-sky-100', 'hover:text-fuchsia-400');
+          goButton.classList.add('inline-flex', 'text-4xl', 'items-center', 'text-base', 'font-semibold', 'text-sky-100', 'hover:text-fuchsia-400');
           // create anchor element and append
           let goLink = document.createElement('a');
           goLink.innerText = "GO";
@@ -100,7 +118,7 @@ const convertUrl = function() {
           goButton.appendChild(goLink);
 
           let copyButton = document.createElement('button');
-          copyButton.classList.add('copy-button', 'text-2xl', 'inline-flex', 'items-center', 'text-base', 'font-semibold', 'text-sky-100', 'hover:text-fuchsia-400', 'pr-8');
+          copyButton.classList.add('copy-button', 'text-4xl', 'inline-flex', 'items-center', 'text-base', 'font-semibold', 'text-sky-100', 'hover:text-fuchsia-400', 'pr-8');
           copyButton.innerText = "COPY";
           copyButton.id = resultUrl;
 
