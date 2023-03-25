@@ -78,7 +78,7 @@ class Spotify:
                 if top_track is None:
                     if query_type == 'search':
                         raise TrackNotFoundOnAlbumException(f"Could not find track on the album '{album}'. To search across albums, omit the album argument.")
-                    for item in results['items']:
+                    for item in results['tracks']['items']:
                         print(item)
                         if artist.lower() in item['artists'][0]['name'].lower() and title.lower() in item['name'].lower():
                             top_track = item
@@ -94,4 +94,3 @@ class Spotify:
 
         track_artist, track_title, track_url = [artist['name'] for artist in top_track['artists']], top_track['name'], top_track['external_urls']['spotify']
         return {'service': 'Spotify', 'title': track_title, 'artist': track_artist, 'url': track_url}
-
