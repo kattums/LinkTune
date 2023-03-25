@@ -4,3 +4,18 @@
 @import url('https://fonts.googleapis.com/css2?family=Leckerli+One&family=Praise&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Praise&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=DM+Sans&display=swap');
+
+@keyframes gradient-pulse {
+    0% {
+      background-position: 0% 50%;
+    }
+    100% {
+      background-position: 100% 50%;
+    }
+  }
+  
+  .gradient-pulse {
+    background: linear-gradient(to right, #f687b3, #90cdf4, #a9a0e1);
+    background-size: 200% 200%;
+    animation: gradient-pulse 3s ease-in-out infinite;
+  }
