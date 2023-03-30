@@ -13,12 +13,68 @@
       background-position: 100% 50%;
     }
   }
-  
+
+  @keyframes waveform-animation {
+    0%, 10%, 40%, 50%, 80%, 90% {
+        transform: translateY(0);
+    }
+    20%, 70% {
+        transform: translateY(-30px);
+    }
+    30%, 60% {
+        transform: translateY(-20px);
+    }
+    100% {
+        transform: translateY(0);
+    }
+}
+
+
+
   .gradient-pulse {
-    background: linear-gradient(to right, #f687b3, #90cdf4, #a9a0e1);
+    background: linear-gradient(
+      to right,
+      #ffa5c2,
+      #ff91b5,
+      #ff7aa8,
+      #ff5e9c,
+      #b7c9ee,
+      #91b5ff,
+      #5e9cff,
+      #2e7ffd,
+      #f5a3c5
+    );
     background-size: 200% 200%;
-    animation: gradient-pulse 3s ease-in-out infinite;
+    animation: gradient-pulse 3s ease-in-out infinite alternate;
   }
+  
+#bar1.animate {
+    animation: waveform-animation 2s ease-in-out infinite 0.1s;
+}
+
+#bar2.animate {
+    animation: waveform-animation 2s ease-in-out infinite 0.2s;
+}
+
+#bar3.animate {
+    animation: waveform-animation 2s ease-in-out infinite 0.3s;
+}
+
+#bar4.animate {
+    animation: waveform-animation 2s ease-in-out infinite 0.4s;
+}
+
+#bar5.animate {
+    animation: waveform-animation 2s ease-in-out infinite 0.5s;
+}
+
+#bar6.animate {
+    animation: waveform-animation 2s ease-in-out infinite 0.6s;
+}
+
+#bar7.animate {
+    animation: waveform-animation 2s ease-in-out infinite 0.7s;
+}
 
 .copy-button:hover, .go-button:hover {
     filter: invert(52%) sepia(35%) saturate(1277%) hue-rotate(297deg) brightness(99%) contrast(90%);

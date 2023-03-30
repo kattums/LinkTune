@@ -4,6 +4,7 @@ const convertButton = document.getElementById('convert');
 const info = document.getElementById('info');
 const results = document.getElementById('results');
 const gradientDiv = document.getElementById('gradient-bar');
+const invalidErr = document.getElementById('invalid');
 
 const logos = {
   'Spotify': '../static/img/icons/Spotify_icon.svg',
@@ -18,9 +19,14 @@ const icons = {
   'go': '../static/img/icons/go.svg'
 };
 
+let isLoading = false;
+let errLogged = false;
+
+
 // event listeners for button click and pressing enter in input
 convertButton.addEventListener('click', (event) => {
-  event.preventDefault(); 
+  event.preventDefault();
+  // add a check for if they didnt put any text in
   convertUrl();
 });
 
@@ -40,34 +46,77 @@ results.addEventListener('click', event => {
     console.log(event.target.id);
     };
   }
-})
+});
 
 // wrapper function for text type writing animation
 const textTypewrite = function(element, text) {
-  var typewriter = new Typewriter(element, {
+  const typewriter = new Typewriter(element, {
     loop: false
   });
 
   typewriter.typeString(text)
   .callFunction(state => state.elements.cursor.style.display = 'none')
   .start();
-}
+};
+
+const loadingAnimationToggle = function() {
+  if (!isLoading) {
+    convertAnimate();
+    gradientDiv.classList.add('gradient-pulse');
+    isLoading = true;
+  } else {
+    convertStopAnimate();
+    gradientDiv.classList.remove('gradient-pulse');
+    isLoading = false;
+  }
+};
+
+const convertAnimate = function() {
+  const paths = document.querySelectorAll('#svgMain path');
+  paths.forEach((path) => {
+    path.classList.add('animate');
+  })
+};
+
+const convertStopAnimate = function() {
+  const paths = document.querySelectorAll('#svgMain path');
+  paths.forEach((path) => {
+    path.classList.remove('animate');
+  })
+};
 
 const convertUrl = function() {
     // clear previous search results
     results.innerHTML = "";
+    info.innerText ="";
 
+    if (errLogged) {
+      invalidErr.classList.add('invisible');
+      errLogged = false;
+    };
 
-    gradientDiv.classList.add('gradient-pulse');
+    loadingAnimationToggle();
+
     // get input value
     const source_url = inputUrl.value;
+    if (!source_url) {
+      invalidErr.classList.remove('invisible');
+
+      loadingAnimationToggle();
+      errLogged = true;
+      return
+    };
   
     // send API request to backend
     fetch(`/convert?url=${source_url}`)
       .then(response => response.json())
       .then(data => {
+
+        // implement error checking ? 
+
+        console.log(data)
         //remove loading gradient pulse
-        gradientDiv.classList.remove('gradient-pulse')
+        loadingAnimationToggle();
 
         // update output with converted link or error message
         const infoText = `${data.title} by ${data.artist}`
@@ -122,7 +171,7 @@ const convertUrl = function() {
           goButton.appendChild(goLink);
           let goIcon = document.createElement('img');
           goIcon.src = icons.go;
-          goIcon.classList.add('h-12', 'w-12', 'go-button');
+          goIcon.classList.add('h-8', 'w-8', 'go-button');
           goLink.appendChild(goIcon);
 
           let copyButton = document.createElement('button');

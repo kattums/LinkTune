@@ -18,24 +18,27 @@
     <main class="">
         <section class="pb-8 text-nuxt-pink flex flex-col items-center">
             <p id ="info" class="text-6xl pb-8 mx-auto font-DMSans">&nbsp;</p>
+            <div id="invalid" class="flex items-center bg-pink-800 p-2 leading-none text-indigo-100 invisible rounded-full" role="alert">
+                <span class="mr-3 flex rounded-full bg-rose-500 px-2 py-1 text-xs inline-flex font-bold uppercase">Oops<i>!</i></span>
+                <span class="mr-2 flex-auto text-left font-semibold">Please enter a valid music track link.</span>
+              </div>
             <div class="relative mx-auto w-[45rem] h-20 pl-4 mb-6">
                 <div class="absolute bottom-0 left-0 w-full h-1">
                     <div id="gradient-bar" class="bg-gradient-to-r from-pink-300 via-cyan-300 to-fuchsia-300 h-full"></div>
                   </div>
                 <input class="text-3xl outline-none bg-transparent text-nuxt-pink w-[43rem] h-20 pr-12" type="text" id="url" placeholder="enter URL to convert" spellcheck="false">
                 <button id="convert" class="absolute inset-y-0 right-0 flex items-center pr-2">
-                    <svg class="w-[3rem] h-[3rem]" viewBox="0 0 512 512" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-                        <defs>
-                          <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                            <stop offset="0%" stop-color="#f472b6" />
-                            <stop offset="50%" stop-color="#a78bfa" />
-                            <stop offset="100%" stop-color="#6b46c1" />
-                          </linearGradient>
-                        </defs>
+                    <svg id="svgMain" class="w-[3rem] h-[3rem]" viewBox="0 0 512 512" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
                         <title>waveform</title>
                         <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                          <g id="icon" fill="url(#gradient)" transform="translate(42.666667, 42.666667)">
-                            <path d="M384,170.666667 L426.666667,170.666667 L426.666667,256 L384,256 L384,170.666667 Z M320,106.666667 L362.666667,106.666667 L362.666667,320 L320,320 L320,106.666667 Z M256,128 L298.666667,128 L298.666667,298.666667 L256,298.666667 L256,128 Z M192,64 L234.666667,64 L234.666667,362.666667 L192,362.666667 L192,64 Z M7.10542736e-15,170.666667 L42.6666667,170.666667 L42.6666667,256 L7.10542736e-15,256 L7.10542736e-15,170.666667 Z M64,106.666667 L106.666667,106.666667 L106.666667,320 L64,320 L64,106.666667 Z M128,7.10542736e-15 L170.666667,7.10542736e-15 L170.666667,426.666667 L128,426.666667 L128,7.10542736e-15 Z" id="Combined-Shape"></path>
+                          <g id="icon" transform="translate(42.666667, 42.666667)">
+                            <path d="M7.10542736e-15,170.666667 L42.6666667,170.666667 L42.6666667,256 L7.10542736e-15,256 L7.10542736e-15,170.666667 Z" fill="#ffa5c2" id="bar1" class="wave" />
+                            <path d="M64,106.666667 L106.666667,106.666667 L106.666667,320 L64,320 L64,106.666667 Z" fill="#dc9fcc" id="bar2" class="wave" />
+                            <path d="M192,64 L234.666667,64 L234.666667,362.666667 L192,362.666667 L192,64 Z" fill="#9892df" id="bar4" />
+                            <path d="M128,7.10542736e-15 L170.666667,7.10542736e-15 L170.666667,426.666667 L128,426.666667 L128,7.10542736e-15 Z" fill="#bc99d5" id="bar3" class="wave" />
+                            <path d="M256,128 L298.666667,128 L298.666667,298.666667 L256,298.666667 L256,128 Z" fill="#8f91e1" id="bar5" class="wave" />
+                            <path d="M320,106.666667 L362.666667,106.666667 L362.666667,320 L320,320 L320,106.666667 Z" fill="#728bea" id="bar6" class="wave" />
+                            <path d="M384,170.666667 L426.666667,170.666667 L426.666667,256 L384,256 L384,170.666667 Z" fill="#3c82f9" id="bar7" class="wave" />
                           </g>
                         </g>
                     </svg>

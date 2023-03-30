@@ -12,6 +12,7 @@ def index():
 @app.route('/convert')
 def convert():
     print('convert request received')
+    # validate input
     url = request.args.get('url')
     return Convert().convert_link(url)
 
